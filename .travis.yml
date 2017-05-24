@@ -18,8 +18,8 @@ addons:
     packages:
       - g++-6
   
-compiler:
-  - gcc
+#compiler:
+#  - gcc
 
 install:
   - sudo apt-get install libgtest-dev
