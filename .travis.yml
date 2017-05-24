@@ -1,0 +1,28 @@
+sudo: 
+  - required  
+  
+dist: 
+  - trusty  
+
+language: 
+  - cpp
+
+compiler:
+  - clang
+  - gcc
+
+install:
+  - sudo apt-get install libgtest-dev
+  - cd /usr/src/gtest
+  - sudo cmake .
+  - sudo make
+  - sudo mv libgtest* /usr/lib/
+  - cd "${TRAVIS_BUILD_DIR}"
+  
+script:
+  - mkdir build && cd build
+  - cmake -DGTEST_ROOT=/usr/lib -DCMAKE_CONFIGURATION_TYPES="Release" ../ 
+  - make
+  - cd Release
+  - ./point_test
+  
