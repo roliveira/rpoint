@@ -178,63 +178,88 @@ public:
 
 		return *this;
 	};
-	
-    // Methods 
 
-	T min(void)                    { return rpoint::min(*this);           };
-	T max(void)                    { return rpoint::max(*this);           };
-	T sum(void)                    { return rpoint::sum(*this);           };
-	RPoint<T> add(RPoint<T> p)     { return rpoint::add(*this, p);        };
-	RPoint<T> sub(RPoint<T> p)     { return rpoint::sub(*this, p);        };
-	RPoint<T> abs(void)            { return rpoint::abs(*this);           };
-	RPoint<T> pow(double exponent) { return rpoint::pow(*this, exponent); };
-	RPoint<T> sqrt(void)           { return rpoint::sqrt(*this);          };
-    T dot(RPoint<T> p)             { return rpoint::dot(*this, p);        };
+	// Methods
+	T min(void);
+	T max(void);
+	T sum(void);
+	RPoint<T> add(RPoint<T> p);
+	RPoint<T> sub(RPoint<T> p);
+	RPoint<T> abs(void);
+	RPoint<T> pow(double exponent);
+	RPoint<T> sqrt(void);
+	T dot(RPoint<T> p);
 
 };
-
-
-// Streams
-
-template<typename T> 
-std::ostream & operator<<(std::ostream & os, const RPoint<T> & p) {
-	os << "Point(" << p.x() << ", " << p.y() << ", " << p.z() << ")";
-	return os;
-}
 
 // Namespace
 
 namespace rpoint {
 
-	// Methods
-
-	template<typename T> 
+	template<typename T>
 	T sum(RPoint<T> p) { return p.x() + p.y() + p.z(); };
 
-	template<typename T> 
+	template<typename T>
 	T min(RPoint<T> p) { return std::min(std::min(p.x(), p.y()), p.z()); };
 
-	template<typename T> 
+	template<typename T>
 	T max(RPoint<T> p) { return std::max(std::max(p.x(), p.y()), p.z()); };
 
-	template<typename T> 
+	template<typename T>
 	RPoint<T> add(RPoint<T> p, RPoint<T> q) { return p + q; };
 
-	template<typename T> 
+	template<typename T>
 	RPoint<T> sub(RPoint<T> p, RPoint<T> q) { return p - q; };
 
-	template<typename T> 
+	template<typename T>
 	RPoint<T> abs(RPoint<T> p) { return RPoint<T>(std::abs(p.x()), std::abs(p.y()), std::abs(p.z())); };
 
-	template<typename T> 
+	template<typename T>
 	RPoint<T> pow(RPoint<T> p, double exponent) { return RPoint<T>(std::pow(p.x(), exponent), std::pow(p.y(), exponent), std::pow(p.z(), exponent)); };
-	
-	template<typename T> 
+
+	template<typename T>
 	RPoint<T> sqrt(RPoint<T> p) { return pow(p, 0.5); };
 
-	template<typename T> 
+	template<typename T>
 	T dot(RPoint<T> p, RPoint<T> q) { return sum(p*q); };
 
+}
+
+// Methods 
+
+template<typename T>
+T RPoint<T>::min(void) { return rpoint::min(*this); };
+
+template<typename T>
+T RPoint<T>::max(void) { return rpoint::max(*this); };
+
+template<typename T>
+T RPoint<T>::sum(void) { return rpoint::sum(*this); };
+
+template<typename T>
+RPoint<T> RPoint<T>::add(RPoint<T> p) { return rpoint::add(*this, p); };
+
+template<typename T>
+RPoint<T> RPoint<T>::sub(RPoint<T> p) { return rpoint::sub(*this, p); };
+
+template<typename T>
+RPoint<T> RPoint<T>::abs(void) { return rpoint::abs(*this); };
+
+template<typename T>
+RPoint<T> RPoint<T>::pow(double exponent) { return rpoint::pow(*this, exponent); };
+
+template<typename T>
+RPoint<T> RPoint<T>::sqrt(void) { return rpoint::sqrt(*this); };
+
+template<typename T>
+T RPoint<T>::dot(RPoint<T> p) { return rpoint::dot(*this, p); };
+
+// Streams
+
+template<typename T>
+std::ostream & operator<<(std::ostream & os, const RPoint<T> & p) {
+	os << "Point(" << p.x() << ", " << p.y() << ", " << p.z() << ")";
+	return os;
 }
 
 // Definitions
