@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
-PROJECT(point)
+PROJECT(rpoint)
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
 

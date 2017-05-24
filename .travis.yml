@@ -8,7 +8,6 @@ language:
   - cpp
 
 compiler:
-  - clang
   - gcc
 
 install:
