@@ -24,8 +24,8 @@ install:
   
 script:
   - mkdir build && cd build
-  - cmake -DGTEST_ROOT=/usr/lib -DCMAKE0_BUID_TYPE="Release" ../ 
+  - cmake -DGTEST_ROOT=/usr/lib -DCMAKE_BUILD_TYPE="Release" ../ 
   - make
-  - cd Release
+  - ls -la && cd Release
   - ./point_test
 
