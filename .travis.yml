@@ -18,7 +18,7 @@ install:
   - gcc --version && g++ --version
   - sudo apt-get install -y libgtest-dev
   - cd /usr/src/gtest
-  - sudo cmake .
+  - sudo cmake -Dgtest_disable_pthreads=ON .
   - sudo make
   - sudo mv libgtest* /usr/lib/
   - cd "${TRAVIS_BUILD_DIR}"
