@@ -2,9 +2,7 @@ sudo: required
 dist: trusty  
   
 language: cpp
-compiler: 
-  - gcc
-  - clang
+compiler: gcc
 
 before_install:
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
@@ -13,6 +11,7 @@ before_install:
 install:
   - sudo apt-get install -y g++-6
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 90
+  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 90
   - export CXX="g++-6"
   - export CC="gcc-6"
   - gcc --version && g++ --version
@@ -25,7 +24,7 @@ install:
   
 script:
   - mkdir build && cd build
-  - cmake -DGTEST_ROOT=/usr/lib -DCMAKE_CONFIGURATION_TYPES="Release" ../ 
+  - cmake -DGTEST_ROOT=/usr/lib -DCMAKE0_BUID_TYPE="Release" ../ 
   - make
   - cd Release
   - ./point_test
