@@ -12,9 +12,9 @@ template<typename T>
 class RPoint {
 
 private:
-	T xval = NULL;
-	T yval = NULL;
-	T zval = NULL;
+	T xval;
+	T yval;
+	T zval;
 	
 public:
     // Constructors
