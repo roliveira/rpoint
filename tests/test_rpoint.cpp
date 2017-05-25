@@ -29,13 +29,6 @@ TEST(PointGetTest, PointGetPoint) {
 }
 
 // Constructors
-TEST(PointCreateTest, PointCreateEmpty) {
-	RPoint<double> p;
-	EXPECT_EQ(NULL, p.x());
-	EXPECT_EQ(NULL, p.y());
-	EXPECT_EQ(NULL, p.z());
-}
-
 TEST(PointCreateTest, PointCreateByValues) {
 	RPoint<double> p(0.0, 1.0, 2.0);
 	EXPECT_EQ(0.0, p.x());
