@@ -26,6 +26,5 @@ script:
   - mkdir build && cd build
   - cmake -DGTEST_ROOT=/usr/lib -DCMAKE_BUILD_TYPE="Release" ../ 
   - make
-  - ls -la && cd Release
   - ./point_test
 
