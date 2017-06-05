@@ -240,6 +240,15 @@ TEST(PointClassMethodTest, PointMethodSqrt) {
 	EXPECT_EQ(p.sqrt().z(), std::sqrt(z));
 }
 
+TEST(PointClassMethodTest, PointMethodDir) {
+    float x = 1, y = 2, z = 3;
+    RPointF p(x, y, z);
+    float m = std::sqrt(std::pow(x, 2) + std::pow(y, 2) + std::pow(z, 2));
+    EXPECT_FLOAT_EQ(p.dir().x(), x / m);
+    EXPECT_FLOAT_EQ(p.dir().y(), y / m);
+    EXPECT_FLOAT_EQ(p.dir().z(), z / m);
+}
+
 TEST(PointClassMethodTest, PointMethodDot) {
 	float x = 1.0, y = 2.0, z = 3.0;
 	float a = 4.0, b = 5.0, c = 6.0;
@@ -311,6 +320,15 @@ TEST(PointNamespaceMethodTest, PointMethodSqrt) {
 	EXPECT_EQ(rpoint::sqrt(p).x(), std::sqrt(x));
 	EXPECT_EQ(rpoint::sqrt(p).y(), std::sqrt(y));
 	EXPECT_EQ(rpoint::sqrt(p).z(), std::sqrt(z));
+}
+
+TEST(PointNamespaceMethodTest, PointMethodDir) {
+    float x = 1, y = 2, z = 3;
+    RPointF p(x, y, z);
+    float m = std::sqrt(std::pow(x, 2) + std::pow(y, 2) + std::pow(z, 2));
+    EXPECT_FLOAT_EQ(rpoint::dir(p).x(), x / m);
+    EXPECT_FLOAT_EQ(rpoint::dir(p).y(), y / m);
+    EXPECT_FLOAT_EQ(rpoint::dir(p).z(), z / m);
 }
 
 TEST(PointNamespaceMethodTest, PointMethodDot) {

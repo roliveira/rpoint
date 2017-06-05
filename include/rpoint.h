@@ -180,6 +180,7 @@ public:
 	};
 
 	// Methods
+
 	T min(void);
 	T max(void);
 	T sum(void);
@@ -188,6 +189,7 @@ public:
 	RPoint<T> abs(void);
 	RPoint<T> pow(double exponent);
 	RPoint<T> sqrt(void);
+    RPoint<T> dir(void);
 	T dot(RPoint<T> p);
 
 };
@@ -220,6 +222,9 @@ namespace rpoint {
 	template<typename T>
 	RPoint<T> sqrt(RPoint<T> p) { return pow(p, 0.5); };
 
+    template<typename T>
+    RPoint<T> dir(RPoint<T> p) { return p / std::sqrt(p.pow(2).sum()); };
+    
 	template<typename T>
 	T dot(RPoint<T> p, RPoint<T> q) { return sum(p*q); };
 
@@ -250,6 +255,9 @@ RPoint<T> RPoint<T>::pow(double exponent) { return rpoint::pow(*this, exponent);
 
 template<typename T>
 RPoint<T> RPoint<T>::sqrt(void) { return rpoint::sqrt(*this); };
+
+template<typename T>
+RPoint<T> RPoint<T>::dir(void) { return rpoint::dir(*this); };
 
 template<typename T>
 T RPoint<T>::dot(RPoint<T> p) { return rpoint::dot(*this, p); };
