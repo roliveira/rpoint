@@ -116,7 +116,98 @@ TEST(PointConvertTest, PointConvertDoubleToFloat) {
 	EXPECT_FLOAT_EQ(z, p1.z());
 }
 
-// Operators
+// Operators on points
+
+TEST(PointOperatorTest, PointOperatorPointAdd) {
+    int x = 1, y = 2, z = 3;
+    int a = 4, b = 5, c = 6;
+    RPointI p(x, y, z);
+    RPointI q(a, b, c);
+    EXPECT_EQ((p + q).x(), x + a);
+    EXPECT_EQ((p + q).y(), y + b);
+    EXPECT_EQ((p + q).z(), z + c);
+}
+
+TEST(PointOperatorTest, PointOperatorPointLess) {
+    int x = 1, y = 2, z = 3;
+    int a = 4, b = 5, c = 6;
+    RPointI p(x, y, z);
+    RPointI q(a, b, c);
+    EXPECT_EQ((p - q).x(), x - a);
+    EXPECT_EQ((p - q).y(), y - b);
+    EXPECT_EQ((p - q).z(), z - c);
+}
+
+TEST(PointOperatorTest, PointOperatorPointMult) {
+    float x = 1, y = 2, z = 3;
+    float a = 4, b = 5, c = 6;
+    RPointF p(x, y, z);
+    RPointF q(a, b, c);
+    EXPECT_FLOAT_EQ((p * q).x(), x * a);
+    EXPECT_FLOAT_EQ((p * q).y(), y * b);
+    EXPECT_FLOAT_EQ((p * q).z(), z * c);
+}
+
+TEST(PointOperatorTest, PointOperatorPointDiv) {
+    float x = 1, y = 2, z = 3;
+    float a = 4, b = 5, c = 6;
+    RPointF p(x, y, z);
+    RPointF q(a, b, c);
+    EXPECT_FLOAT_EQ((p / q).x(), x / a);
+    EXPECT_FLOAT_EQ((p / q).y(), y / b);
+    EXPECT_FLOAT_EQ((p / q).z(), z / c);
+}
+
+// Operators on values
+
+TEST(PointOperatorTest, PointOperatorValueAdd) {
+    int x = 1, y = 2, z = 3;
+    int a = 4, b = 5, c = 6;
+    RPointI p(x, y, z);
+    EXPECT_EQ((p + a).x(), x + a);
+    EXPECT_EQ((p + b).y(), y + b);
+    EXPECT_EQ((p + c).z(), z + c);
+    EXPECT_EQ((a + p).x(), x + a);
+    EXPECT_EQ((b + p).y(), y + b);
+    EXPECT_EQ((c + p).z(), z + c);
+}
+
+TEST(PointOperatorTest, PointOperatorValueLess) {
+    int x = 1, y = 2, z = 3;
+    int a = 4, b = 5, c = 6;
+    RPointI p(x, y, z);
+    EXPECT_EQ((p - a).x(), x - a);
+    EXPECT_EQ((p - b).y(), y - b);
+    EXPECT_EQ((p - c).z(), z - c);
+    EXPECT_EQ((a - p).x(), a - x);
+    EXPECT_EQ((b - p).y(), b - y);
+    EXPECT_EQ((c - p).z(), c - z);
+}
+
+TEST(PointOperatorTest, PointOperatorValueMult) {
+    float x = 1, y = 2, z = 3;
+    float a = 4, b = 5, c = 6;
+    RPointF p(x, y, z);
+    EXPECT_FLOAT_EQ((p * a).x(), x * a);
+    EXPECT_FLOAT_EQ((p * b).y(), y * b);
+    EXPECT_FLOAT_EQ((p * c).z(), z * c);
+    EXPECT_FLOAT_EQ((a * p).x(), x * a);
+    EXPECT_FLOAT_EQ((b * p).y(), y * b);
+    EXPECT_FLOAT_EQ((c * p).z(), z * c);
+}
+
+TEST(PointOperatorTest, PointOperatorValueDiv) {
+    float x = 1, y = 2, z = 3;
+    float a = 4, b = 5, c = 6;
+    RPointF p(x, y, z);
+    EXPECT_FLOAT_EQ((p / a).x(), x / a);
+    EXPECT_FLOAT_EQ((p / b).y(), y / b);
+    EXPECT_FLOAT_EQ((p / c).z(), z / c);
+    EXPECT_FLOAT_EQ((a / p).x(), a / x) ;
+    EXPECT_FLOAT_EQ((b / p).y(), b / y) ;
+    EXPECT_FLOAT_EQ((c / p).z(), c / z) ;
+}
+
 TEST(PointOperatorTest, PointOperatorPostfixIncrement) {
 	int x = 1, y = 2, z = 3;
 	RPointI p(x, y, z);
@@ -166,6 +257,7 @@ TEST(PointOperatorTest, PointOperatorPrefixDecrement) {
 }
 
 // Streams
+
 TEST(PointStreamTest, PointStreamOutput) {
 	int x = 1, y = 2, z = 3;
 	RPointI p0(x, y, z);
