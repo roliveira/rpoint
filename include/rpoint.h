@@ -230,6 +230,20 @@ namespace rpoint {
 
 }
 
+// Operators on values, "free operator"
+
+template<typename T>
+RPoint<T> operator+(const T &val, RPoint<T> p) { return p + val; };
+
+template<typename T>
+RPoint<T> operator-(const T &val, RPoint<T> p) { return RPoint<T>(val - p.x(), val - p.y(), val - p.z()); };
+
+template<typename T>
+RPoint<T> operator*(const T &val, RPoint<T> p) { return p * val; };
+
+template<typename T>
+RPoint<T> operator/(const T &val, RPoint<T> p) { return RPoint<T>(val / p.x(), val / p.y(), val / p.z()); };
+
 // Methods 
 
 template<typename T>
