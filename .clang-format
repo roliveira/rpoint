@@ -1,0 +1,12 @@
+---
+Language:        Cpp
+BasedOnStyle:  LLVM
+#
+AlwaysBreakTemplateDeclarations: false
+AlignTrailingComments: true
+AllowShortFunctionsOnASingleLine: All
+ColumnLimit: 0
+IndentWidth: 4
+NamespaceIndentation: All
+...
+
