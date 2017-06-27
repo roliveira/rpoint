@@ -5,15 +5,8 @@
 #include <iostream>
 #include <cstdarg>
 #include <vector>
+#include <algorithm>
 
-
-template <typename T, int D>
-class RPointIterator {
-public:
-
-private:
-
-};
 
 // RPoint class
 template <typename T>
@@ -21,17 +14,43 @@ class RPoint {
 
 private:
 
-    std::vector<T> x = std::vector<T>(0);
-    int dim = 0;
+    std::vector<T> x = std::vector<T>(0);  // Vector containing the point values
+    int dim = 0;                           // Dimension of the point
 
+    // Setters
+    // The content size sets the dimension of the class
+
+    // Sets values (T val1, T val2, ...)
     template<typename... Ts>
     void setValue(const Ts&... args) {
         dim = sizeof...(args);
         x = { args... };
     };
-    
-    //void setValue(const std::vector<T> vec) {
-    //}
+
+    // Sets values from a std::vector
+    void setValue(const std::vector<T> vec) {
+        dim = static_cast<int>(vec.size());
+        std::copy(vec.begin(), vec.end(), x.begin());
+    }
+
+    // Sets values from another point
+    void setValue(const RPoint<T> p) {
+        dim = p.dim;
+        std::copy(p.begin(), p.end(), x.begin());
+    }
+
+    // Extend point's dimension appending values to the end
+    template<typename... Ts>
+    void appendValue(const T&... args) {
+        std::vector<T> vec = { args... };
+        appendValue(vec);
+    }
+
+    // Extend point's dimension appending a vector to the end
+    void appendValue(const std::vector<T> vec) {
+        dim += vec.size();
+        x.push_back(vec);
+    }
 
 public:
 
@@ -46,36 +65,80 @@ public:
     // Constructors
 
     template<typename... Ts>
-    RPoint(const Ts&... args) { setValue(args...); };
-    RPoint(const std::vector<T> vec) { setValue(vec...); };
-    RPoint(const RPoint<T> &p) { setPoint(p); };
+    RPoint(const Ts&... args)        { setValue(args...); };
+    RPoint(const std::vector<T> vec) { setValue(vec);     };
+    RPoint(const RPoint<T> p)        { setValue(p);       };
 
     // Setters
+
+    template<typename... Ts>
+    void push_back(const Ts&... args)        { appendValue(args...); };
+    void push_back(const std::vector<T> vec) { appendValue(vec);     };
 
     // Getters
 
     RPoint<T> getPoint(void) const { return *this; };
 
+    // Converters
+
+    std::vector<T> toVector(void) const {
+        std::vector<T> vec;
+        std::copy(x.begin(), x.end(), std::back_inserter(vec));
+        return vec;
+    };
+
+    template <typename U>
+    std::vector<U> toVector(void) const {
+        std::vector<U> vec;
+        std::copy(x.begin(), x.end(), std::back_inserter(vec));
+        return vec;
+    };
+
+    template <typename U>
+    RPoint<U> to(void) const { return toVector<U>(); };
+
+    // Operators
+
+    // Arithmetic operators
+
+    // Unary plus
+    template <typename U>
+    RPoint<T> operator+(void) const {
+        return *this;
+    };
+
+    template <typename U>
+    RPoint<T> operator+(const RPoint<U> &p) const {
+        std::vector<T> vec(p.dim);
+        std::transform(p.begin(), p.end(), vec.begin(), std::plus<U>());
+        return vec;
+    };
+
+    // Unary minus
+    template <typename U>
+    RPoint<T> operator-(void) const {
+        std::vector<T> vec(p.dim);
+        std::transform(x.begin(), x.end(), vec.begin(), std::negate<U>());
+        return vec;
+    };
+
+    RPoint<T> operator-(const RPoint<T> &p) const {
+        std::transform(p.begin(), p.end(), x.begin(), std::minus<T>());
+        return *this;
+    };
+
+    RPoint<T> operator*(const RPoint<T> &p) const {
+        std::transform(p.begin(), p.end(), x.begin(), std::multiplies<T>());
+        return *this;
+    };
+
+    RPoint<T> operator/(const RPoint<T> &p) const {
+        std::transform(p.begin(), p.end(), x.begin(), std::divides<T>());
+        return *this;
+    };
+
 };
 
-//    void setPoint(const T x, const T y, const T z) {
-//        xval = x;
-//        yval = y;
-//        zval = z;
-//    };
-//
-//    void setPoint(const std::vector<T> xyz) {
-//        xval = xyz[0];
-//        yval = xyz[1];
-//        zval = xyz[2];
-//    };
-//
-//    void setPoint(const RPoint<T> &p) {
-//        xval = p.x();
-//        yval = p.y();
-//        zval = p.z();
-//    };
-//
 //    void setX(T x) { xval = x; };
 //    void setY(T y) { yval = y; };
 //    void setZ(T z) { zval = z; };
@@ -87,13 +150,6 @@ public:
 //    T x(void) const { return xval; };
 //    T y(void) const { return yval; };
 //    T z(void) const { return zval; };
-//
-//    // Converters
-//
-//    std::vector<T> toStdVector(void) { return std::vector<T>{xval, yval, zval}; };
-//
-//    template <typename U>
-//    RPoint<U> to() const { return RPoint<U>((U)xval, (U)yval, (U)zval); };
 //
 //    // Operations on Points
 //
@@ -306,12 +362,9 @@ public:
 
 template <typename T>
 std::ostream &operator<<(std::ostream &os, const RPoint<T> &p) {
-
-    typedef typename std::vector<T>::const_iterator const_iterator;
-
     os << "Point(" << *p.begin();
 
-    for (const_iterator it = p.begin()+1; it != p.end(); ++it) {
+    for (std::vector<T>::const_iterator it = p.begin()+1; it != p.end(); ++it) {
         os << ", " << *it;
     }
 
