@@ -6,8 +6,13 @@
 #include <cstdarg>
 #include <vector>
 #include <algorithm>
+#include <numeric>
 #include <functional>
 #include <cassert>
+#include <typeinfo>
+#include <string>
+#include <cxxabi.h>
+#include <memory>
 
 
 // RPoint class
@@ -16,8 +21,8 @@ class RPoint {
 
 private:
 
-    std::vector<T> r = std::vector<T>(0);  // Vector containing the point values
-    int dim = 0;                           // Dimension of the point
+    std::vector<T> r;  // Vector containing the point values
+    int dim;           // Dimension of the point
 
     // Setters
 
@@ -31,13 +36,13 @@ private:
     // Sets values from a std::vector
     void setValue(const std::vector<T> vec) {
         dim = static_cast<int>(vec.size());
-        std::copy(vec.begin(), vec.end(), r.begin());
+        r = vec;
     }
 
     // Sets values from another point
-    void setValue(const RPoint<T> p) {
+    void setValue(const RPoint<T> &p) {
         dim = p.dim;
-        std::copy(p.begin(), p.end(), r.begin());
+        r = p.r;
     }
 
     // Extend point's dimension appending values to the end
@@ -58,13 +63,18 @@ public:
     typedef typename std::vector<T>::iterator       iterator;
     typedef typename std::vector<T>::const_iterator const_iterator;
 
-    iterator       begin()       { return &r.begin(); };
-    iterator       end()         { return &r.end();   };
-    const_iterator begin() const { return r.begin();  };
-    const_iterator end() const   { return r.end();    };
+    iterator       begin()        { return r.begin();  };
+    iterator       end()          { return r.end();    };
+    const_iterator cbegin() const { return r.cbegin(); };
+    const_iterator cend() const   { return r.cend();   };
 
     // Constructors
-    RPoint(void)                     {  };
+
+    RPoint(void) {
+        r = std::vector<T>(0);
+        dim = 0;
+    };
+
     template<typename... Ts>
     RPoint(const Ts&... args)        { setValue(args...); };
     RPoint(const std::vector<T> vec) { setValue(vec);     };
@@ -78,7 +88,7 @@ public:
 
     // Getters
 
-    RPoint<T> getPoint(void) const { return *this; };
+    RPoint<T> get(void) const { return *this; };
     T getX(void) { return r[0]; };
     T getY(void) { return r[1]; };
     T getZ(void) { return r[2]; };
@@ -102,7 +112,7 @@ public:
     };
 
     template <typename U>
-    RPoint<U> to(void) const { return toVector<U>(); };
+    RPoint<U> to(void) const { return RPoint<U>(); };
 
     // Operators
 
@@ -114,289 +124,302 @@ public:
 
     // Arithmetic operators
 
-    // Unary plus
-    //RPoint<T> operator+(void) const;
+    // Addition : point + value
 
-    //// Addition - point + point
-    //template <typename U>
-    //RPoint<T> operator+(const RPoint<U> &p) const {
-    //    std::vector<T> vec(p.dim);
-    //    std::transform(p.begin(), p.end(), vec.begin(), std::plus<U>());
-    //    return RPoint<T>(vec);
-    //};
+    template <typename U>
+    RPoint<T> operator+(const U val) {
+        std::vector<T> vout = std::vector<T>(dim);
+        std::transform(r.begin(), r.end(), vout.begin(), std::bind2nd(std::plus<T>(), val));
+        return RPoint<T>(vout);
+    };
 
-    //// Addition - point + value
-    //template <typename U>
-    //RPoint<T> operator+(const U val) const {
-    //    std::vector<T> vec(dim, val);
-    //    std::transform(r.begin(), r.end(), vec.begin(), std::plus<U>());
-    //    return RPoint<T>(vec);
-    //};
+    // Addition : point + point
 
-    // Unary minus
-    //RPoint<T> operator-(void) const ;
+    template <typename U>
+    RPoint<T> operator+(const RPoint<U> p) {
+        std::vector<T> vout = p.r;
+        std::transform(r.begin(), r.end(), p.r.begin(), vout.begin(), std::plus<T>());
+        return RPoint<T>(vout);
+    };
 
-    //// Subtraction
-    //RPoint<T> operator-(const RPoint<T> &p) const {
-    //    std::transform(p.begin(), p.end(), r.begin(), std::minus<T>());
-    //    return *this;
-    //};
+    // Subtraction : point - value
 
-    //RPoint<T> operator*(const RPoint<T> &p) const {
-    //    std::transform(p.begin(), p.end(), r.begin(), std::multiplies<T>());
-    //    return *this;
-    //};
+    template <typename U>
+    RPoint<T> operator-(const U val) {
+        std::vector<T> vout = std::vector<T>(dim);
+        std::transform(r.begin(), r.end(), vout.begin(), std::bind2nd(std::minus<T>(), val));
+        return RPoint<T>(vout);
+    };
 
-    //RPoint<T> operator/(const RPoint<T> &p) const {
-    //    std::transform(p.begin(), p.end(), r.begin(), std::divides<T>());
-    //    return *this;
-    //};
+    // Subtraction : point - point
+
+    template <typename U>
+    RPoint<T> operator-(const RPoint<U> p) {
+        std::vector<T> vout = p.r;
+        std::transform(r.begin(), r.end(), p.r.begin(), vout.begin(), std::minus<T>());
+        return RPoint<T>(vout);
+    };
+
+
+    // Multiplication : point * value
+
+    template <typename U>
+    RPoint<T> operator*(const U val) {
+        std::vector<T> vout = std::vector<T>(dim);
+        std::transform(r.begin(), r.end(), vout.begin(), std::bind2nd(std::multiplies<T>(), val));
+        return RPoint<T>(vout);
+    };
+
+    // Multiplication : point * point
+
+    template <typename U>
+    RPoint<T> operator*(const RPoint<U> p) {
+        std::vector<T> vout = p.r;
+        std::transform(r.begin(), r.end(), p.r.begin(), vout.begin(), std::multiplies<T>());
+        return RPoint<T>(vout);
+    };
+
+    // Division : point / value
+
+    template <typename U>
+    RPoint<T> operator/(const U val) {
+        std::vector<T> vout = std::vector<T>(dim);
+        std::transform(r.begin(), r.end(), vout.begin(), std::bind2nd(std::divides<T>(), val));
+        return RPoint<T>(vout);
+    };
+
+    // Division : point / point
+
+    template <typename U>
+    RPoint<T> operator/(const RPoint<U> p) {
+        std::vector<T> vout = p.r;
+        std::transform(r.begin(), r.end(), p.r.begin(), vout.begin(), std::divides<T>());
+        return RPoint<T>(vout);
+    };
+
+    // Increment/decrement operators
+
+    // Increment : prefix
+
+    RPoint<T> &operator++() {
+        std::transform(r.begin(), r.end(), r.begin(), std::bind2nd(std::plus<T>(), 1));
+        return *this;
+    };
+
+    // Increment : postfix
+
+    RPoint<T> operator++(int) {
+        RPoint<T> p = *this;
+        ++*this;
+        return p;
+    };
+
+    // Decrement : prefix
+
+    RPoint<T> &operator--() {
+        std::transform(r.begin(), r.end(), r.begin(), std::bind2nd(std::minus<T>(), 1));
+        return *this;
+    };
+
+    // Decrement : postfix
+
+    RPoint<T> operator--(int) {
+        RPoint<T> p = *this;
+        --*this;
+        return p;
+    };
+
+    // Assignment operators
+
+    // Addition assignment : point += value
+
+    template <typename U>
+    RPoint<T> operator+=(const U val) {
+        *this = *this + val;
+        return *this;
+    }
+
+    // Addition assignment : point += point
+
+    template <typename U>
+    RPoint<T> operator+=(const RPoint<U> p) {
+        *this = *this + p;
+        return *this;
+    }
+
+    // Subtraction assignment : point -= value
+
+    template <typename U>
+    RPoint<T> operator-=(const U val) {
+        *this = *this - val;
+        return *this;
+    }
+
+    // Subtraction assignment : point -= point
+
+    template <typename U>
+    RPoint<T> operator-=(const RPoint<U> p) {
+        *this = *this - p;
+        return *this;
+    }
+
+    // Multiplication assignment : point *= value
+
+    template <typename U>
+    RPoint<T> operator*=(const U val) {
+        *this = *this * val;
+        return *this;
+    }
+
+    // Multiplication assignment : point *= point
+
+    template <typename U>
+    RPoint<T> operator*=(const RPoint<U> p) {
+        *this = *this * p;
+        return *this;
+    }
+
+    // Division assignment : point /= value
+
+    template <typename U>
+    RPoint<T> operator/=(const U val) {
+        *this = *this / val;
+        return *this;
+    }
+
+    // Division assignment : point /= point
+
+    template <typename U>
+    RPoint<T> operator/=(const RPoint<U> p) {
+        *this = *this / p;
+        return *this;
+    }
+
+    // Methods
+
+    T min(void);
+    T max(void);
+    T sum(void);
+    RPoint<T> add(RPoint<T> p);
+    RPoint<T> sub(RPoint<T> p);
+    RPoint<T> abs(void);
+    RPoint<T> pow(double exponent);
+    RPoint<T> sqrt(void);
+    RPoint<T> dir(void);
+    T dot(RPoint<T> p);
 
 };
 
-//    void setX(T r) { xval = r; };
-//    void setY(T y) { yval = y; };
-//    void setZ(T z) { zval = z; };
-//
-//    T getX(void) const { return xval; };
-//    T getY(void) const { return yval; };
-//    T getZ(void) const { return zval; };
-//
-//    T r(void) const { return xval; };
-//    T y(void) const { return yval; };
-//    T z(void) const { return zval; };
-//
-//    // Operations on Points
-//
-//    RPoint<T> operator+(const RPoint<T> &p) { return RPoint(xval + p.xval, yval + p.yval, zval + p.zval); };
-//    RPoint<T> operator-(const RPoint<T> &p) { return RPoint(xval - p.xval, yval - p.yval, zval - p.zval); };
-//    RPoint<T> operator*(const RPoint<T> &p) { return RPoint(xval * p.xval, yval * p.yval, zval * p.zval); };
-//    RPoint<T> operator/(const RPoint<T> &p) { return RPoint(xval / p.xval, yval / p.yval, zval / p.zval); };
-//
-//    RPoint<T> operator+=(const RPoint<T> &p) {
-//        this->xval += p.xval;
-//        this->yval += p.yval;
-//        this->zval += p.zval;
-//
-//        return *this;
-//    };
-//
-//    RPoint<T> operator-=(const RPoint<T> &p) {
-//        this->xval -= p.xval;
-//        this->yval -= p.yval;
-//        this->zval -= p.zval;
-//
-//        return *this;
-//    };
-//
-//    RPoint<T> operator*=(const RPoint<T> &p) {
-//        this->xval *= p.xval;
-//        this->yval *= p.yval;
-//        this->zval *= p.zval;
-//
-//        return *this;
-//    };
-//
-//    RPoint<T> operator/=(const RPoint<T> &p) {
-//        this->xval /= p.xval;
-//        this->yval /= p.yval;
-//        this->zval /= p.zval;
-//
-//        return *this;
-//    };
-//
-//    // Prefix increment operator.
-//    RPoint<T> &operator++() {
-//        xval++;
-//        yval++;
-//        zval++;
-//
-//        return *this;
-//    };
-//
-//    // Postfix increment operator.
-//    RPoint<T> operator++(int) {
-//        RPoint<T> p = *this;
-//        ++*this;
-//
-//        return p;
-//    };
-//
-//    // Prefix decrement operator.
-//    RPoint<T> &operator--() {
-//        xval--;
-//        yval--;
-//        zval--;
-//
-//        return *this;
-//    };
-//
-//    // Postfix decrement operator.
-//    RPoint<T> operator--(int) {
-//        RPoint<T> p = *this;
-//        --*this;
-//
-//        return p;
-//    };
-//
-//    // Operations on values
-//
-//    RPoint<T> operator+(const T &val) { return RPoint(xval + val, yval + val, zval + val); };
-//    RPoint<T> operator-(const T &val) { return RPoint(xval - val, yval - val, zval - val); };
-//    RPoint<T> operator*(const T &val) { return RPoint(xval * val, yval * val, zval * val); };
-//    RPoint<T> operator/(const T &val) { return RPoint(xval / val, yval / val, zval / val); };
-//
-//    RPoint<T> operator+=(const T val) {
-//        this->xval += val;
-//        this->yval += val;
-//        this->zval += val;
-//
-//        return *this;
-//    };
-//
-//    RPoint<T> operator-=(const T val) {
-//        this->xval -= val;
-//        this->yval -= val;
-//        this->zval -= val;
-//
-//        return *this;
-//    };
-//
-//    RPoint<T> operator*=(const T val) {
-//        this->xval *= val;
-//        this->yval *= val;
-//        this->zval *= val;
-//
-//        return *this;
-//    };
-//
-//    RPoint<T> operator/=(const T val) {
-//        this->xval /= val;
-//        this->yval /= val;
-//        this->zval /= val;
-//
-//        return *this;
-//    };
-//
-//    // Methods
-//
-//    T min(void);
-//    T max(void);
-//    T sum(void);
-//    RPoint<T> add(RPoint<T> p);
-//    RPoint<T> sub(RPoint<T> p);
-//    RPoint<T> abs(void);
-//    RPoint<T> pow(double exponent);
-//    RPoint<T> sqrt(void);
-//    RPoint<T> dir(void);
-//    T dot(RPoint<T> p);
-//};
-//
-//// Namespace
-//
-//namespace rpoint {
-//
-//    template <typename T>
-//    T sum(RPoint<T> p) { return p.r() + p.y() + p.z(); };
-//
-//    template <typename T>
-//    T min(RPoint<T> p) { return std::min(std::min(p.r(), p.y()), p.z()); };
-//
-//    template <typename T>
-//    T max(RPoint<T> p) { return std::max(std::max(p.r(), p.y()), p.z()); };
-//
-//    template <typename T>
-//    RPoint<T> add(RPoint<T> p, RPoint<T> q) { return p + q; };
-//
-//    template <typename T>
-//    RPoint<T> sub(RPoint<T> p, RPoint<T> q) { return p - q; };
-//
-//    template <typename T>
-//    RPoint<T> abs(RPoint<T> p) { return RPoint<T>(std::abs(p.r()), std::abs(p.y()), std::abs(p.z())); };
-//
-//    template <typename T>
-//    RPoint<T> pow(RPoint<T> p, double exponent) { return RPoint<T>(std::pow(p.r(), exponent), std::pow(p.y(), exponent), std::pow(p.z(), exponent)); };
-//
-//    template <typename T>
-//    RPoint<T> sqrt(RPoint<T> p) { return pow(p, 0.5); };
-//
-//    template <typename T>
-//    RPoint<T> dir(RPoint<T> p) { return p / std::sqrt(p.pow(2).sum()); };
-//
-//    template <typename T>
-//    T dot(RPoint<T> p, RPoint<T> q) { return sum(p * q); };
-//}
-//
+// Namespace
 
-// Operators 
+namespace rpoint {
 
-//template <typename T> 
-//RPoint<T> RPoint<T>::operator+(void) const {
-//    std::vector<T> vec(dim, 0);
-//    std::transform(r.begin(), r.end(), vec.begin(), std::plus<T>());
-//    return RPoint<T>(vec);
-//};
+    template <typename T>
+    T sum(RPoint<T> p) {
+        T res;
+        std::accumulate(p.begin(), p.end(), res);
+        return res;
+    };
 
-//template <typename T> 
-//RPoint<T> RPoint<T>::operator-(void) const {
-//    RPoint<T> p(0);
-//    std::transform(begin(), end(), p.begin(), std::negate<T>());
-//    return &p;
-//};
+    template <typename T>
+    T min(RPoint<T> p) { return *std::min_element(p.begin(), p.end()); };
 
-//// Operators on values, "free operator"
-//
-//template <typename T>
-//RPoint<T> operator+(const T &val, RPoint<T> p) { return p + val; };
-//
-//template <typename T>
-//RPoint<T> operator-(const T &val, RPoint<T> p) { return RPoint<T>(val - p.r(), val - p.y(), val - p.z()); };
-//
-//template <typename T>
-//RPoint<T> operator*(const T &val, RPoint<T> p) { return p * val; };
-//
-//template <typename T>
-//RPoint<T> operator/(const T &val, RPoint<T> p) { return RPoint<T>(val / p.r(), val / p.y(), val / p.z()); };
-//
-//// Methods
-//
-//template <typename T>
-//T RPoint<T>::min(void) { return rpoint::min(*this); };
-//
-//template <typename T>
-//T RPoint<T>::max(void) { return rpoint::max(*this); };
-//
-//template <typename T>
-//T RPoint<T>::sum(void) { return rpoint::sum(*this); };
-//
-//template <typename T>
-//RPoint<T> RPoint<T>::add(RPoint<T> p) { return rpoint::add(*this, p); };
-//
-//template <typename T>
-//RPoint<T> RPoint<T>::sub(RPoint<T> p) { return rpoint::sub(*this, p); };
-//
-//template <typename T>
-//RPoint<T> RPoint<T>::abs(void) { return rpoint::abs(*this); };
-//
-//template <typename T>
-//RPoint<T> RPoint<T>::pow(double exponent) { return rpoint::pow(*this, exponent); };
-//
-//template <typename T>
-//RPoint<T> RPoint<T>::sqrt(void) { return rpoint::sqrt(*this); };
-//
-//template <typename T>
-//RPoint<T> RPoint<T>::dir(void) { return rpoint::dir(*this); };
-//
-//template <typename T>
-//T RPoint<T>::dot(RPoint<T> p) { return rpoint::dot(*this, p); };
-//
+    template <typename T>
+    T max(RPoint<T> p) { return *std::max_element(p.begin(), p.end()); };
+
+    template <typename T>
+    RPoint<T> add(RPoint<T> p, RPoint<T> q) { return p + q; };
+
+    template <typename T>
+    RPoint<T> sub(RPoint<T> p, RPoint<T> q) { return p - q; };
+
+    template <typename T>
+    RPoint<T> abs(RPoint<T> p) {
+        RPoint<T> pout;
+        for(T v : p) pout.push_back(std::abs(v));
+        return pout;
+    };
+
+    template <typename T>
+    RPoint<T> pow(RPoint<T> p, double exponent) {
+        RPoint<T> pout;
+        for(T v : p) pout.push_back(std::pow(v, exponent));
+        return pout;
+    };
+
+    template <typename T>
+    RPoint<T> sqrt(RPoint<T> p) { return pow(p, 0.5); };
+
+    template <typename T>
+    RPoint<T> dir(RPoint<T> p) { return p / std::sqrt(p.pow(2).sum()); };
+
+    template <typename T>
+    T dot(RPoint<T> p, RPoint<T> q) { return sum(p * q); };
+}
+
+
+// Free Operators
+
+template <typename T>
+RPoint<T> operator+(const T &val, RPoint<T> p) { return p + val; };
+
+template <typename T>
+RPoint<T> operator-(const T &val, RPoint<T> p) { return val - p; };
+
+template <typename T>
+RPoint<T> operator*(const T &val, RPoint<T> p) { return p * val; };
+
+template <typename T>
+RPoint<T> operator/(const T &val, RPoint<T> p) { return val / p; };
+
+// Methods
+
+template <typename T>
+T RPoint<T>::min(void) { return rpoint::min(*this); };
+
+template <typename T>
+T RPoint<T>::max(void) { return rpoint::max(*this); };
+
+template <typename T>
+T RPoint<T>::sum(void) { return rpoint::sum(*this); };
+
+template <typename T>
+RPoint<T> RPoint<T>::add(RPoint<T> p) { return rpoint::add(*this, p); };
+
+template <typename T>
+RPoint<T> RPoint<T>::sub(RPoint<T> p) { return rpoint::sub(*this, p); };
+
+template <typename T>
+RPoint<T> RPoint<T>::abs(void) { return rpoint::abs(*this); };
+
+template <typename T>
+RPoint<T> RPoint<T>::pow(double exponent) { return rpoint::pow(*this, exponent); };
+
+template <typename T>
+RPoint<T> RPoint<T>::sqrt(void) { return rpoint::sqrt(*this); };
+
+template <typename T>
+RPoint<T> RPoint<T>::dir(void) { return rpoint::dir(*this); };
+
+template <typename T>
+T RPoint<T>::dot(RPoint<T> p) { return rpoint::dot(*this, p); };
+
 // Streams
 
 template <typename T>
 std::ostream &operator<<(std::ostream &os, const RPoint<T> &p) {
-    os << "Point(" << *p.begin();
 
-    for (std::vector<T>::const_iterator it = p.begin()+1; it != p.end(); ++it) {
+    int status = -4;
+
+    std::unique_ptr<char, void(*)(void*)> res {
+        abi::__cxa_demangle(typeid(T).name(), NULL, NULL, &status),
+        &std::free
+    };
+
+    const char *tname = (status == 0) ? res.get() : typeid(T).name();
+    os << "RPoint<" << tname << ">(" << *p.cbegin();
+
+    for (typename RPoint<T>::const_iterator it = p.cbegin()+1; it != p.cend(); ++it) {
         os << ", " << *it;
     }
 
