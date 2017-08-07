@@ -11,50 +11,23 @@
 #include <cassert>
 #include <typeinfo>
 #include <string>
-#include <cxxabi.h>
 #include <memory>
 
 
 // RPoint class
 template <typename T>
 class RPoint {
-
 private:
-
     std::vector<T> r;  // Vector containing the point values
-    int dim;           // Dimension of the point
-
-    // Setters
-
-    // Sets values (T val1, T val2, ...)
-    template<typename... Ts>
-    void setValue(const Ts&... args) {
-        dim = sizeof...(args);
-        r = { args... };
-    };
-
-    // Sets values from a std::vector
-    void setValue(const std::vector<T> vec) {
-        dim = static_cast<int>(vec.size());
-        r = vec;
-    }
-
-    // Sets values from another point
-    void setValue(const RPoint<T> &p) {
-        dim = p.dim;
-        r = p.r;
-    }
 
     // Extend point's dimension appending values to the end
     template<typename... Ts>
     void appendValue(const Ts&... args) {
-        std::vector<T> vec = { args... };
-        appendValue(vec);
+        appendValue({ args... });
     }
 
     // Extend point's dimension appending a vector to the end
     void appendValue(const std::vector<T> vec) {
-        dim += static_cast<int>(vec.size());
         r.insert(r.begin(), vec.begin(), vec.end());
     }
 
@@ -66,35 +39,36 @@ public:
     iterator       begin()        { return r.begin();  };
     iterator       end()          { return r.end();    };
     const_iterator cbegin() const { return r.cbegin(); };
-    const_iterator cend() const   { return r.cend();   };
+    const_iterator cend()   const { return r.cend();   };
 
     // Constructors
 
-    RPoint(void) {
-        r = std::vector<T>(0);
-        dim = 0;
-    };
-
-    template<typename... Ts>
-    RPoint(const Ts&... args)        { setValue(args...); };
-    RPoint(const std::vector<T> vec) { setValue(vec);     };
-    RPoint(const RPoint<T> &p)       { setValue(p);       };
+    RPoint(void)                                       : r(std::vector<T>(0)) { };
+    RPoint(const std::vector<T> vec)                   : r(vec)               { };
+    RPoint(const std::initializer_list<T> ivec)        : r(ivec)              { };
+    RPoint(const iterator begin, const iterator end)   : r(begin, end)        { };
+    RPoint(const RPoint<T> &p)                         : r(p.r)               { };
+    template<typename... Ts> RPoint(const Ts&... args) : r({ args... })       { };
 
     // Setters
 
     template<typename... Ts>
     void push_back(const Ts&... args)        { appendValue(args...); };
     void push_back(const std::vector<T> vec) { appendValue(vec);     };
+    void push_back(const iterator cbegin, const iterator cend) { appendValue({ cbegin, cend }); };
+    void push_back(const RPoint<T> p)        { appendValue(p.r);     };
 
     // Getters
 
+    size_t size(void) { return r.size(); }
+
     RPoint<T> get(void) const { return *this; };
-    T getX(void) { return r[0]; };
-    T getY(void) { return r[1]; };
-    T getZ(void) { return r[2]; };
-    T x(void) { return r[0]; };
-    T y(void) { return r[1]; };
-    T z(void) { return r[2]; };
+    T getX(void)              { return (*this)[0];  };
+    T getY(void)              { return (*this)[1];  };
+    T getZ(void)              { return (*this)[2];  };
+    T x(void)                 { return (*this)[0];  };
+    T y(void)                 { return (*this)[1];  };
+    T z(void)                 { return (*this)[2];  };
 
     // Converters
 
@@ -112,7 +86,7 @@ public:
     };
 
     template <typename U>
-    RPoint<U> to(void) const { return RPoint<U>(); };
+    RPoint<U> to(void) const { return RPoint<U>((*this).toVector<U>()); };
 
     // Operators
 
@@ -128,7 +102,7 @@ public:
 
     template <typename U>
     RPoint<T> operator+(const U val) {
-        std::vector<T> vout = std::vector<T>(dim);
+        std::vector<T> vout = std::vector<T>(r.size());
         std::transform(r.begin(), r.end(), vout.begin(), std::bind2nd(std::plus<T>(), val));
         return RPoint<T>(vout);
     };
@@ -146,7 +120,7 @@ public:
 
     template <typename U>
     RPoint<T> operator-(const U val) {
-        std::vector<T> vout = std::vector<T>(dim);
+        std::vector<T> vout = std::vector<T>(r.size());
         std::transform(r.begin(), r.end(), vout.begin(), std::bind2nd(std::minus<T>(), val));
         return RPoint<T>(vout);
     };
@@ -165,7 +139,7 @@ public:
 
     template <typename U>
     RPoint<T> operator*(const U val) {
-        std::vector<T> vout = std::vector<T>(dim);
+        std::vector<T> vout = std::vector<T>(r.size());
         std::transform(r.begin(), r.end(), vout.begin(), std::bind2nd(std::multiplies<T>(), val));
         return RPoint<T>(vout);
     };
@@ -183,7 +157,7 @@ public:
 
     template <typename U>
     RPoint<T> operator/(const U val) {
-        std::vector<T> vout = std::vector<T>(dim);
+        std::vector<T> vout = std::vector<T>(r.size());
         std::transform(r.begin(), r.end(), vout.begin(), std::bind2nd(std::divides<T>(), val));
         return RPoint<T>(vout);
     };
@@ -411,13 +385,13 @@ std::ostream &operator<<(std::ostream &os, const RPoint<T> &p) {
 
     int status = -4;
 
-    std::unique_ptr<char, void(*)(void*)> res {
-        abi::__cxa_demangle(typeid(T).name(), NULL, NULL, &status),
-        &std::free
-    };
+    //std::unique_ptr<char, void(*)(void*)> res {
+    //    abi::__cxa_demangle(typeid(T).name(), NULL, NULL, &status),
+    //    &std::free
+    //};
 
-    const char *tname = (status == 0) ? res.get() : typeid(T).name();
-    os << "RPoint<" << tname << ">(" << *p.cbegin();
+    //const char *tname = (status == 0) ? res.get() : typeid(T).name();
+    //os << "RPoint<" << tname << ">(" << *p.cbegin();
 
     for (typename RPoint<T>::const_iterator it = p.cbegin()+1; it != p.cend(); ++it) {
         os << ", " << *it;

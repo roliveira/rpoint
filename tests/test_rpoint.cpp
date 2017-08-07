@@ -1,179 +1,316 @@
-#include "gtest/gtest.h"
+
+#include "catch.hpp"
 #include "rpoint.h"
+
+
+// Constructors
+
+TEST_CASE("Creating points", "[constructors]") {
+
+    SECTION("empty") {
+        REQUIRE_NOTHROW(RPointI());
+    }
+
+    SECTION("from values") {
+
+        SECTION("in 1D") {
+            REQUIRE_NOTHROW(RPointI(1));
+        }
+
+        SECTION("in 2D") {
+            REQUIRE_NOTHROW(RPointI(1, 2));
+        }
+
+        SECTION("in 3D") {
+            REQUIRE_NOTHROW(RPointI(1, 2, 3));
+        }
+
+        SECTION("in 4D") {
+            REQUIRE_NOTHROW(RPointI(1, 2, 3, 4));
+        }
+
+    }
+
+    SECTION("from vectors") {
+
+        SECTION("in 1D") {
+            std::vector<int> vec = { 1 };
+            REQUIRE_NOTHROW(RPointI(vec));
+        }
+
+        SECTION("in 2D") {
+            std::vector<int> vec = { 1, 2 };
+            REQUIRE_NOTHROW(RPointI(vec));
+        }
+
+        SECTION("in 3D") {
+            std::vector<int> vec = { 1, 2, 3 };
+            REQUIRE_NOTHROW(RPointI(vec));
+        }
+
+        SECTION("in 4D") {
+            std::vector<int> vec = { 1, 2, 3, 4 };
+            REQUIRE_NOTHROW(RPointI(vec));
+        }
+
+    }
+
+    SECTION("from iterators") {
+
+        SECTION("in 1D") {
+            std::vector<int> vec = { 1 };
+            REQUIRE_NOTHROW(RPointI(vec.begin(), vec.end()));
+        }
+
+        SECTION("in 2D") {
+            std::vector<int> vec = { 1, 2 };
+            REQUIRE_NOTHROW(RPointI(vec.begin(), vec.end()));
+        }
+
+        SECTION("in 3D") {
+            std::vector<int> vec = { 1, 2, 3 };
+            REQUIRE_NOTHROW(RPointI(vec.begin(), vec.end()));
+        }
+
+        SECTION("in 4D") {
+            std::vector<int> vec = { 1, 2, 3, 4 };
+            REQUIRE_NOTHROW(RPointI(vec.begin(), vec.end()));
+        }
+
+    }
+
+    SECTION("from another point") {
+
+        SECTION("in 1D") {
+            RPointI p = { 1 };
+            REQUIRE_NOTHROW(RPointI(p));
+        }
+
+        SECTION("in 2D") {
+            RPointI p = { 1, 2 };
+            REQUIRE_NOTHROW(RPointI(p));
+        }
+
+        SECTION("in 3D") {
+            RPointI p = { 1, 2, 3 };
+            REQUIRE_NOTHROW(RPointI(p));
+        }
+
+        SECTION("in 4D") {
+            RPointI p = { 1, 2, 3, 4 };            
+            REQUIRE_NOTHROW(RPointI(p));
+        }
+
+    }
+
+}
 
 
 // Setters
 
-TEST(PointSetTest, PushBackValues1D) {
-    RPointI p;
-    EXPECT_NO_THROW(p.push_back(1));
+
+TEST_CASE("Setting points by pushing back", "[setters]") {
+
+    SECTION("values") {
+
+        SECTION("in 1D") {
+            RPointI p;
+            REQUIRE_NOTHROW(p.push_back(1));
+        }
+
+        SECTION("in 2D") {
+            RPointI p;
+            REQUIRE_NOTHROW(p.push_back(1, 2));
+        }
+
+        SECTION("in 3D") {
+            RPointI p;
+            REQUIRE_NOTHROW(p.push_back(1, 2, 3));
+        }
+
+        SECTION("in 4D") {
+            RPointI p;
+            REQUIRE_NOTHROW(p.push_back(1, 2, 3, 4));
+        }
+
+    }
+
+    SECTION("vectors") {
+
+        SECTION("in 1D") {
+            RPointI p;
+            std::vector<int> vec = { 1 };
+            REQUIRE_NOTHROW(p.push_back(vec));
+        }
+
+        SECTION("in 2D") {
+            RPointI p;
+            std::vector<int> vec = { 1, 2 };
+            REQUIRE_NOTHROW(p.push_back(vec));
+        }
+
+        SECTION("in 3D") {
+            RPointI p;
+            std::vector<int> vec = { 1, 2, 3 };
+            REQUIRE_NOTHROW(p.push_back(vec));
+        }
+
+        SECTION("in 4D") {
+            RPointI p;
+            std::vector<int> vec = { 1, 2, 3, 4 };
+            REQUIRE_NOTHROW(p.push_back(vec));
+        }
+
+    }
+
+    SECTION("iterators") {
+
+        SECTION("in 1D") {
+            RPointI p;
+            std::vector<int> vec = { 1 };
+            REQUIRE_NOTHROW(p.push_back(vec.begin(), vec.end()));
+        }
+
+        SECTION("in 2D") {
+            RPointI p;
+            std::vector<int> vec = { 1, 2 };
+            REQUIRE_NOTHROW(p.push_back(vec.begin(), vec.end()));
+        }
+
+        SECTION("in 3D") {
+            RPointI p;
+            std::vector<int> vec = { 1, 2, 3 };
+            REQUIRE_NOTHROW(p.push_back(vec.begin(), vec.end()));
+        }
+
+        SECTION("in 4D") {
+            RPointI p;
+            std::vector<int> vec = { 1, 2, 3, 4 };
+            REQUIRE_NOTHROW(p.push_back(vec.begin(), vec.end()));
+        }
+
+    }
+
+    SECTION("another point") {
+
+        SECTION("in 1D") {
+            RPointI p, q;
+            std::vector<int> vec = { 1 };
+            CHECK_NOTHROW(q.push_back(vec));
+            REQUIRE_NOTHROW(p.push_back(q));
+        }
+
+        SECTION("in 2D") {
+            RPointI p, q;
+            std::vector<int> vec = { 1, 2 };
+            CHECK_NOTHROW(q.push_back(vec));
+            REQUIRE_NOTHROW(p.push_back(q));
+        }
+
+        SECTION("in 3D") {
+            RPointI p, q;
+            std::vector<int> vec = { 1, 2, 3 };
+            CHECK_NOTHROW(q.push_back(vec));
+            REQUIRE_NOTHROW(p.push_back(q));
+        }
+
+        SECTION("in 4D") {
+            RPointI p, q;
+            std::vector<int> vec = { 1, 2, 3, 4 };
+            CHECK_NOTHROW(q.push_back(vec));
+            REQUIRE_NOTHROW(p.push_back(q));
+        }
+
+    }
+
 }
 
-TEST(PointSetTest, PushBackValues2D) {
-    RPointI p;
-    EXPECT_NO_THROW(p.push_back(1, 2));
+
+// Getters
+
+
+TEST_CASE("Getting point attributes", "[getters]") {
+	RPointI p(1, 2);
+
+    SECTION("with its size") {
+        REQUIRE_NOTHROW(p.size());
+        REQUIRE(p.size() == 2);
+    }
+
+    SECTION("from verbose methods") {
+        REQUIRE_NOTHROW(p.getX());
+        REQUIRE(p.getX() == 1);
+        REQUIRE_NOTHROW(p.getY());
+        REQUIRE(p.getY() == 2);
+        REQUIRE_THROWS(p.getZ());
+    }
+
+    SECTION("from short methods") {
+        REQUIRE_NOTHROW(p.x());
+        REQUIRE(p.x() == 1);
+        REQUIRE_NOTHROW(p.y());
+        REQUIRE(p.y() == 2);
+        REQUIRE_THROWS(p.z());
+    }
+
+    SECTION("from subscript access operator") {
+        REQUIRE_NOTHROW(p[0]);
+        REQUIRE(p[0] == 1);
+        REQUIRE_NOTHROW(p[1]);
+        REQUIRE(p[1] == 2);
+        REQUIRE_THROWS(p[2]);
+    }
+
 }
 
-TEST(PointSetTest, PushBackValues3D) {
-    RPointI p;
-    EXPECT_NO_THROW(p.push_back(1, 2, 3));
+
+// Converters
+
+
+TEST_CASE("Converting points", "[converters]") {
+    RPointF p(1.2f, 2.7f);
+
+    SECTION("to vectors") {
+        
+        SECTION("of same type") {
+            REQUIRE_NOTHROW(p.toVector());
+            REQUIRE(p.toVector()[0] == Approx(1.2));
+            REQUIRE(p.toVector()[1] == Approx(2.7));
+        }
+
+        SECTION("of different type") {
+            REQUIRE_NOTHROW(p.toVector());
+            REQUIRE(p.toVector<int>()[0] == 1);
+            REQUIRE(p.toVector<int>()[1] == 2);
+        }
+
+    }
+
+    SECTION("to another point") {
+
+        SECTION("of different type") {
+            REQUIRE_NOTHROW(p.to<int>());
+            REQUIRE(p.to<int>().x() == 1);
+            REQUIRE(p.to<int>().y() == 2);
+        }
+
+    }
+
 }
 
-TEST(PointSetTest, PushBackValues4D) {
-    RPointI p;
-    EXPECT_NO_THROW(p.push_back(1, 2, 3, 4));
-}
-
-TEST(PointSetTest, PushBackVector1D) {
-    RPointI p;
-    std::vector<int> vec = { 1 };
-    EXPECT_NO_THROW(p.push_back(vec));
-}
-
-TEST(PointSetTest, PushBackVector2D) {
-    RPointI p;
-    std::vector<int> vec = { 1, 2 };
-    EXPECT_NO_THROW(p.push_back(vec));
-}
-
-TEST(PointSetTest, PushBackVector3D) {
-    RPointI p;
-    std::vector<int> vec = { 1, 2, 3 };
-    EXPECT_NO_THROW(p.push_back(vec));
-}
-
-TEST(PointSetTest, PushBackVector4D) {
-    RPointI p;
-    std::vector<int> vec = { 1, 2, 3, 4 };
-    EXPECT_NO_THROW(p.push_back(vec));
-}
-
-//TEST(PointSetTest, PointSetValue) {
-//	RPoint<double> p;
-//	EXPECT_NO_THROW(p.setX(0.0));
-//	EXPECT_NO_THROW(p.setY(1.0));
-//	EXPECT_NO_THROW(p.setZ(2.0));
-//}
-//
-//// Getters
-//TEST(PointGetTest, PointGetValue) {
-//	RPoint<double> p;
-//	p.setX(0.0);
-//	p.setY(1.0);
-//	p.setZ(2.0);
-//	EXPECT_NO_THROW(p.getX());
-//	EXPECT_NO_THROW(p.getY());
-//	EXPECT_NO_THROW(p.getZ());
-//}
-//
-//TEST(PointGetTest, PointGetPoint) {
-//	RPoint<double> p;
-//	p.setX(0.0);
-//	p.setY(1.0);
-//	p.setZ(2.0);
-//	EXPECT_NO_THROW(p.getPoint());
-//}
-//
-//// Constructors
-//TEST(PointCreateTest, PointCreateByValues) {
-//	RPoint<double> p(0.0, 1.0, 2.0);
-//	EXPECT_EQ(0.0, p.r());
-//	EXPECT_EQ(1.0, p.y());
-//	EXPECT_EQ(2.0, p.z());
-//}
-
-//TEST(PointCreateTest, PointCreateByVector) {
-//	std::vector<double> vec = { 0.0, 1.0, 2.0 };
-//	RPoint<double> p(vec);
-//	EXPECT_EQ(0.0, p.r());
-//	EXPECT_EQ(1.0, p.y());
-//	EXPECT_EQ(2.0, p.z());
-//}
-
-//TEST(PointCreateTest, PointCreateByPoint) {
-//	RPoint<double> p0(0.0, 1.0, 2.0);
-//	RPoint<double> p(p0);
-//	EXPECT_EQ(0.0, p.r());
-//	EXPECT_EQ(1.0, p.y());
-//	EXPECT_EQ(2.0, p.z());
-//}
-//
-//// Converters
-//TEST(PointConvertTest, PointConvertToVector) {
-//	int r = 1, y = 2, z = 3;
-//	RPointI p0(r, y, z);
-//	std::vector<int> p1 = {r, y, z};
-//	EXPECT_EQ(p1[0], p0.r());
-//	EXPECT_EQ(p1[1], p0.y());
-//	EXPECT_EQ(p1[2], p0.z());
-//}
-//
-//TEST(PointConvertTest, PointConvertIntToFloat) {
-//	float r = 1.0, y = 2.0, z = 3.0;
-//	RPointI p0(static_cast<int>(r), static_cast<int>(y), static_cast<int>(z));
-//	RPointF p1 = p0.to<float>();
-//	EXPECT_FLOAT_EQ(r, p1.r());
-//	EXPECT_FLOAT_EQ(y, p1.y());
-//	EXPECT_FLOAT_EQ(z, p1.z());
-//}
-//
-//TEST(PointConvertTest, PointConvertIntToDouble) {
-//	double r = 1.0, y = 2.0, z = 3.0;
-//	RPointI p0(static_cast<int>(r), static_cast<int>(y), static_cast<int>(z));
-//	RPointD p1 = p0.to<double>();
-//	EXPECT_DOUBLE_EQ(r, p1.r());
-//	EXPECT_DOUBLE_EQ(y, p1.y());
-//	EXPECT_DOUBLE_EQ(z, p1.z());
-//}
-//
-//TEST(PointConvertTest, PointConvertFloatToInt) {
-//	int r = 1, y = 2, z = 3;
-//	RPointF p0(static_cast<float>(r), static_cast<float>(y), static_cast<float>(z));
-//	RPointI p1 = p0.to<int>();
-//	EXPECT_EQ(r, p1.r());
-//	EXPECT_EQ(y, p1.y());
-//	EXPECT_EQ(z, p1.z());
-//}
-//
-//TEST(PointConvertTest, PointConvertFloatToDouble) {
-//	double r = 1.0, y = 2.0, z = 3.0;
-//	RPointI p0(static_cast<int>(r), static_cast<int>(y), static_cast<int>(z));
-//	RPointD p1 = p0.to<double>();
-//	EXPECT_DOUBLE_EQ(r, p1.r());
-//	EXPECT_DOUBLE_EQ(y, p1.y());
-//	EXPECT_DOUBLE_EQ(z, p1.z());
-//}
-//
-//TEST(PointConvertTest, PointConvertDoubleToInt) {
-//	int r = 1, y = 2, z = 3;
-//	RPointD p0(static_cast<double>(r), static_cast<double>(y), static_cast<double>(z));
-//	RPointI p1 = p0.to<int>();
-//	EXPECT_EQ(r, p1.r());
-//	EXPECT_EQ(y, p1.y());
-//	EXPECT_EQ(z, p1.z());
-//}
-//
-//TEST(PointConvertTest, PointConvertDoubleToFloat) {
-//	float r = 1.0, y = 2.0, z = 3.0;
-//	RPointD p0(static_cast<double>(r), static_cast<double>(y), static_cast<double>(z));
-//	RPointF p1 = p0.to<float>();
-//	EXPECT_FLOAT_EQ(r, p1.r());
-//	EXPECT_FLOAT_EQ(y, p1.y());
-//	EXPECT_FLOAT_EQ(z, p1.z());
-//}
-//
 
 // Operators
 
-TEST(PointOperatorTest, SubscriptMemberAccess) {
+
+TEST_CASE("SubscriptMemberAccess", "[PointOperatorTest]") {
     int x = 1, y = 2, z = 3;
     RPointI p(x, y, z);
-    EXPECT_EQ(p[0], x);
-    EXPECT_EQ(p[1], y);
-    EXPECT_EQ(p[2], z);
+    REQUIRE(p[0] == x);
+    REQUIRE(p[1] == y);
+    REQUIRE(p[2] == z);
 }
 
-//TEST(PointOperatorTest, UnaryPlus) {
+//TEST_CASE(PointOperatorTest, UnaryPlus) {
 //    int x = 1, y = 2;
 //    RPointI p(x, y);
 //    (p).x();
@@ -181,14 +318,14 @@ TEST(PointOperatorTest, SubscriptMemberAccess) {
 //    EXPECT_EQ((+p).y(), y);
 //}
 //
-//TEST(PointOperatorTest, UnaryMinus) {
+//TEST_CASE(PointOperatorTest, UnaryMinus) {
 //    int x = 1, y = 2;
 //    RPointI p(x, y);
 //    EXPECT_EQ((-p).x(), x);
 //    EXPECT_EQ((-p).y(), y);
 //}
 
-//TEST(PointOperatorTest, AdditionValue) {
+//TEST_CASE(PointOperatorTest, AdditionValue) {
 //    int x = 1, y = 2, z = 3;
 //    int val = 4;
 //    RPointI p(x, y, z);
@@ -197,7 +334,7 @@ TEST(PointOperatorTest, SubscriptMemberAccess) {
 //    EXPECT_EQ(p.z(), z);
 //}
 //
-//TEST(PointOperatorTest, AdditionPoint) {
+//TEST_CASE(PointOperatorTest, AdditionPoint) {
 //    int x = 1, y = 2, z = 3;
 //    int a = 4, b = 5, c = 6;
 //    RPointI p(x, y, z);
@@ -207,7 +344,7 @@ TEST(PointOperatorTest, SubscriptMemberAccess) {
 //    EXPECT_EQ(p.z(), z);
 //}
 
-//TEST(PointOperatorTest, PointOperatorUnaryMinus) {
+//TEST_CASE(PointOperatorTest, PointOperatorUnaryMinus) {
 //    int x = 1, y = 2, z = 3;
 //    RPointI p(x, y, z);
 //    p = -p;
@@ -216,7 +353,7 @@ TEST(PointOperatorTest, SubscriptMemberAccess) {
 //    EXPECT_EQ(p.z(), -z);
 //}
 
-//TEST(PointOperatorTest, PointOperatorPointLess) {
+//TEST_CASE(PointOperatorTest, PointOperatorPointLess) {
 //    int r = 1, y = 2, z = 3;
 //    int a = 4, b = 5, c = 6;
 //    RPointI p(r, y, z);
@@ -226,7 +363,7 @@ TEST(PointOperatorTest, SubscriptMemberAccess) {
 //    EXPECT_EQ((p - q).z(), z - c);
 //}
 //
-//TEST(PointOperatorTest, PointOperatorPointMult) {
+//TEST_CASE(PointOperatorTest, PointOperatorPointMult) {
 //    float r = 1, y = 2, z = 3;
 //    float a = 4, b = 5, c = 6;
 //    RPointF p(r, y, z);
@@ -236,7 +373,7 @@ TEST(PointOperatorTest, SubscriptMemberAccess) {
 //    EXPECT_FLOAT_EQ((p * q).z(), z * c);
 //}
 //
-//TEST(PointOperatorTest, PointOperatorPointDiv) {
+//TEST_CASE(PointOperatorTest, PointOperatorPointDiv) {
 //    float r = 1, y = 2, z = 3;
 //    float a = 4, b = 5, c = 6;
 //    RPointF p(r, y, z);
@@ -248,7 +385,7 @@ TEST(PointOperatorTest, SubscriptMemberAccess) {
 //
 //// Operators on values
 //
-//TEST(PointOperatorTest, PointOperatorValueAdd) {
+//TEST_CASE(PointOperatorTest, PointOperatorValueAdd) {
 //    int r = 1, y = 2, z = 3;
 //    int a = 4, b = 5, c = 6;
 //    RPointI p(r, y, z);
@@ -260,7 +397,7 @@ TEST(PointOperatorTest, SubscriptMemberAccess) {
 //    EXPECT_EQ((c + p).z(), z + c);
 //}
 //
-//TEST(PointOperatorTest, PointOperatorValueLess) {
+//TEST_CASE(PointOperatorTest, PointOperatorValueLess) {
 //    int r = 1, y = 2, z = 3;
 //    int a = 4, b = 5, c = 6;
 //    RPointI p(r, y, z);
@@ -272,7 +409,7 @@ TEST(PointOperatorTest, SubscriptMemberAccess) {
 //    EXPECT_EQ((c - p).z(), c - z);
 //}
 //
-//TEST(PointOperatorTest, PointOperatorValueMult) {
+//TEST_CASE(PointOperatorTest, PointOperatorValueMult) {
 //    float r = 1, y = 2, z = 3;
 //    float a = 4, b = 5, c = 6;
 //    RPointF p(r, y, z);
@@ -284,7 +421,7 @@ TEST(PointOperatorTest, SubscriptMemberAccess) {
 //    EXPECT_FLOAT_EQ((c * p).z(), z * c);
 //}
 //
-//TEST(PointOperatorTest, PointOperatorValueDiv) {
+//TEST_CASE(PointOperatorTest, PointOperatorValueDiv) {
 //    float r = 1, y = 2, z = 3;
 //    float a = 4, b = 5, c = 6;
 //    RPointF p(r, y, z);
@@ -296,7 +433,7 @@ TEST(PointOperatorTest, SubscriptMemberAccess) {
 //    EXPECT_FLOAT_EQ((c / p).z(), c / z) ;
 //}
 //
-//TEST(PointOperatorTest, PointOperatorPostfixIncrement) {
+//TEST_CASE(PointOperatorTest, PointOperatorPostfixIncrement) {
 //	int r = 1, y = 2, z = 3;
 //	RPointI p(r, y, z);
 //	p++;
@@ -308,7 +445,7 @@ TEST(PointOperatorTest, SubscriptMemberAccess) {
 //	EXPECT_EQ(p.z(), z);
 //}
 //
-//TEST(PointOperatorTest, PointOperatorPrefixIncrement) {
+//TEST_CASE(PointOperatorTest, PointOperatorPrefixIncrement) {
 //	int r = 1, y = 2, z = 3;
 //	RPointI p(r, y, z);
 //	++p;
@@ -320,7 +457,7 @@ TEST(PointOperatorTest, SubscriptMemberAccess) {
 //	EXPECT_EQ(p.z(), z);
 //}
 //
-//TEST(PointOperatorTest, PointOperatorPostfixDecrement) {
+//TEST_CASE(PointOperatorTest, PointOperatorPostfixDecrement) {
 //	int r = 1, y = 2, z = 3;
 //	RPointI p(r, y, z);
 //	p--;
@@ -332,7 +469,7 @@ TEST(PointOperatorTest, SubscriptMemberAccess) {
 //	EXPECT_EQ(p.z(), z);
 //}
 //
-//TEST(PointOperatorTest, PointOperatorPrefixDecrement) {
+//TEST_CASE(PointOperatorTest, PointOperatorPrefixDecrement) {
 //	int r = 1, y = 2, z = 3;
 //	RPointI p(r, y, z);
 //	--p;
@@ -346,7 +483,7 @@ TEST(PointOperatorTest, SubscriptMemberAccess) {
 //
 // Streams
 
-TEST(PointStreamTest, PointStreamOutput) {
+TEST_CASE("PointStreamOutput", "[PointStreamTest]") {
 	int x = 1, y = 2, z = 3;
 	RPointI p0(x, y, z);
 
@@ -355,30 +492,30 @@ TEST(PointStreamTest, PointStreamOutput) {
     std::ostringstream ostream;
 	ostream << p0;
 	
-    EXPECT_STREQ(p0string.c_str(), ostream.str().c_str());
+    REQUIRE(p0string.c_str() == ostream.str().c_str());
 }
 
 //// Class methods
 //
-//TEST(PointClassMethodTest, PointMethodMin) {
+//TEST_CASE(PointClassMethodTest, PointMethodMin) {
 //	int r = 1, y = 2, z = 3;
 //	RPointI p(r, y, z);
 //	EXPECT_EQ(p.min(), r);
 //}
 //
-//TEST(PointClassMethodTest, PointMethodMax) {
+//TEST_CASE(PointClassMethodTest, PointMethodMax) {
 //	int r = 1, y = 2, z = 3;
 //	RPointI p(r, y, z);
 //	EXPECT_EQ(p.max(), z);
 //}
 //
-//TEST(PointClassMethodTest, PointMethodSum) {
+//TEST_CASE(PointClassMethodTest, PointMethodSum) {
 //	int r = 1, y = 2, z = 3;
 //	RPointI p(r, y, z);
 //	EXPECT_EQ(p.sum(), r + y + z);
 //}
 //
-//TEST(PointClassMethodTest, PointMethodAdd) {
+//TEST_CASE(PointClassMethodTest, PointMethodAdd) {
 //	int r = 1, y = 2, z = 3;
 //	int a = 4, b = 5, c = 6;
 //	RPointI p(r, y, z);
@@ -388,7 +525,7 @@ TEST(PointStreamTest, PointStreamOutput) {
 //	EXPECT_EQ(p.add(q).z(), (p + q).z());
 //}
 //
-//TEST(PointClassMethodTest, PointMethodSub) {
+//TEST_CASE(PointClassMethodTest, PointMethodSub) {
 //	int r = 1, y = 2, z = 3;
 //	int a = 4, b = 5, c = 6;
 //	RPointI p(r, y, z);
@@ -398,7 +535,7 @@ TEST(PointStreamTest, PointStreamOutput) {
 //	EXPECT_EQ(q.sub(p).z(), (q - p).z());
 //}
 //
-//TEST(PointClassMethodTest, PointMethodAbs) {
+//TEST_CASE(PointClassMethodTest, PointMethodAbs) {
 //	int r = 1, y = 2, z = 3;
 //	RPointI p(r, y, z);
 //	EXPECT_GE(p.abs().r(), 0);
@@ -406,7 +543,7 @@ TEST(PointStreamTest, PointStreamOutput) {
 //	EXPECT_GE(p.abs().z(), 0);
 //}
 //
-//TEST(PointClassMethodTest, PointMethodPow) {
+//TEST_CASE(PointClassMethodTest, PointMethodPow) {
 //	int r = 1, y = 2, z = 3;
 //	int exponent = 2;
 //	RPointI p(r, y, z);
@@ -415,7 +552,7 @@ TEST(PointStreamTest, PointStreamOutput) {
 //	EXPECT_EQ(p.pow(exponent).z(), std::pow(z, exponent));
 //}
 //
-//TEST(PointClassMethodTest, PointMethodSqrt) {
+//TEST_CASE(PointClassMethodTest, PointMethodSqrt) {
 //	int r = 1, y = 4, z = 9;
 //	RPointI p(r, y, z);
 //	EXPECT_EQ(p.sqrt().r(), std::sqrt(r));
@@ -423,7 +560,7 @@ TEST(PointStreamTest, PointStreamOutput) {
 //	EXPECT_EQ(p.sqrt().z(), std::sqrt(z));
 //}
 //
-//TEST(PointClassMethodTest, PointMethodDir) {
+//TEST_CASE(PointClassMethodTest, PointMethodDir) {
 //    float r = 1, y = 2, z = 3;
 //    RPointF p(r, y, z);
 //    float m = std::sqrt(std::pow(r, 2) + std::pow(y, 2) + std::pow(z, 2));
@@ -432,7 +569,7 @@ TEST(PointStreamTest, PointStreamOutput) {
 //    EXPECT_FLOAT_EQ(p.dir().z(), z / m);
 //}
 //
-//TEST(PointClassMethodTest, PointMethodDot) {
+//TEST_CASE(PointClassMethodTest, PointMethodDot) {
 //	float r = 1.0, y = 2.0, z = 3.0;
 //	float a = 4.0, b = 5.0, c = 6.0;
 //	RPointF p(r, y, z);
@@ -442,25 +579,25 @@ TEST(PointStreamTest, PointStreamOutput) {
 //
 //// Namespace methods
 //
-//TEST(PointNamespaceMethodTest, PointMethodMin) {
+//TEST_CASE(PointNamespaceMethodTest, PointMethodMin) {
 //	int r = 1, y = 2, z = 3;
 //	RPointI p(r, y, z);
 //	EXPECT_EQ(rpoint::min(p), r);
 //}
 //
-//TEST(PointNamespaceMethodTest, PointMethodMax) {
+//TEST_CASE(PointNamespaceMethodTest, PointMethodMax) {
 //	int r = 1, y = 2, z = 3;
 //	RPointI p(r, y, z);
 //	EXPECT_EQ(rpoint::max(p), z);
 //}
 //
-//TEST(PointNamespaceMethodTest, PointMethodSum) {
+//TEST_CASE(PointNamespaceMethodTest, PointMethodSum) {
 //	int r = 1, y = 2, z = 3;
 //	RPointI p(r, y, z);
 //	EXPECT_EQ(rpoint::sum(p), r + y + z);
 //}
 //
-//TEST(PointNamespaceMethodTest, PointMethodAdd) {
+//TEST_CASE(PointNamespaceMethodTest, PointMethodAdd) {
 //	int r = 1, y = 2, z = 3;
 //	int a = 4, b = 5, c = 6;
 //	RPointI p(r, y, z);
@@ -470,7 +607,7 @@ TEST(PointStreamTest, PointStreamOutput) {
 //	EXPECT_EQ(rpoint::add(p, q).z(), (p + q).z());
 //}
 //
-//TEST(PointNamespaceMethodTest, PointMethodSub) {
+//TEST_CASE(PointNamespaceMethodTest, PointMethodSub) {
 //	int r = 1, y = 2, z = 3;
 //	int a = 4, b = 5, c = 6;
 //	RPointI p(r, y, z);
@@ -480,7 +617,7 @@ TEST(PointStreamTest, PointStreamOutput) {
 //	EXPECT_EQ(rpoint::sub(q, p).z(), (q - p).z());
 //}
 //
-//TEST(PointNamespaceMethodTest, PointMethodAbs) {
+//TEST_CASE(PointNamespaceMethodTest, PointMethodAbs) {
 //	int r = 1, y = 2, z = 3;
 //	RPointI p(r, y, z);
 //	EXPECT_GE(rpoint::abs(p).r(), 0);
@@ -488,7 +625,7 @@ TEST(PointStreamTest, PointStreamOutput) {
 //	EXPECT_GE(rpoint::abs(p).z(), 0);
 //}
 //
-//TEST(PointNamespaceMethodTest, PointMethodPow) {
+//TEST_CASE(PointNamespaceMethodTest, PointMethodPow) {
 //	int r = 1, y = 2, z = 3;
 //	int exponent = 2;
 //	RPointI p(r, y, z);
@@ -497,7 +634,7 @@ TEST(PointStreamTest, PointStreamOutput) {
 //	EXPECT_EQ(rpoint::pow(p, exponent).z(), std::pow(z, exponent));
 //}
 //
-//TEST(PointNamespaceMethodTest, PointMethodSqrt) {
+//TEST_CASE(PointNamespaceMethodTest, PointMethodSqrt) {
 //	int r = 1, y = 4, z = 9;
 //	RPointI p(r, y, z);
 //	EXPECT_EQ(rpoint::sqrt(p).r(), std::sqrt(r));
@@ -505,7 +642,7 @@ TEST(PointStreamTest, PointStreamOutput) {
 //	EXPECT_EQ(rpoint::sqrt(p).z(), std::sqrt(z));
 //}
 //
-//TEST(PointNamespaceMethodTest, PointMethodDir) {
+//TEST_CASE(PointNamespaceMethodTest, PointMethodDir) {
 //    float r = 1, y = 2, z = 3;
 //    RPointF p(r, y, z);
 //    float m = std::sqrt(std::pow(r, 2) + std::pow(y, 2) + std::pow(z, 2));
@@ -514,7 +651,7 @@ TEST(PointStreamTest, PointStreamOutput) {
 //    EXPECT_FLOAT_EQ(rpoint::dir(p).z(), z / m);
 //}
 //
-//TEST(PointNamespaceMethodTest, PointMethodDot) {
+//TEST_CASE(PointNamespaceMethodTest, PointMethodDot) {
 //	float r = 1.0, y = 2.0, z = 3.0;
 //	float a = 4.0, b = 5.0, c = 6.0;
 //	RPointF p(r, y, z);

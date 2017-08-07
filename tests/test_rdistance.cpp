@@ -4,7 +4,7 @@
 //
 //
 //// Euclidean
-//TEST(DistanceTest, DistanceEuclidean) {
+//TEST_CASE(DistanceTest, DistanceEuclidean) {
 //	RPoint<double> p(1.0, 2.0, 3.0);
 //	RPoint<double> q(2.5, 6.1, 7.3);
 //	double d = euclidean(p, q);
@@ -13,7 +13,7 @@
 //}
 //
 //// Manhattan
-//TEST(DistanceTest, DistanceManhattan) {
+//TEST_CASE(DistanceTest, DistanceManhattan) {
 //	RPoint<double> p(1.0, 2.0, 3.0);
 //	RPoint<double> q(2.5, 6.1, 7.3);
 //	double d = manhattan(p, q);
@@ -22,7 +22,7 @@
 //}
 //
 //// Canberra
-//TEST(DistanceTest, DistanceCanberra) {
+//TEST_CASE(DistanceTest, DistanceCanberra) {
 //	RPoint<double> p(1.0, 2.0, 3.0);
 //	RPoint<double> q(2.5, 6.1, 7.3);
 //	double d = canberra(p, q);
@@ -33,7 +33,7 @@
 //}
 //
 //// Chebyshev
-//TEST(DistanceTest, DistanceChebyshev) {
+//TEST_CASE(DistanceTest, DistanceChebyshev) {
 //	RPoint<double> p(1.0, 2.0, 3.0);
 //	RPoint<double> q(2.5, 6.1, 7.3);
 //	double d = chebyshev(p, q);
