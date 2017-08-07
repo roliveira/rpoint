@@ -50,6 +50,10 @@ public:
     RPoint(const RPoint<T> &p)                         : r(p.r)               { };
     template<typename... Ts> RPoint(const Ts&... args) : r({ args... })       { };
 
+    // Destructors
+
+    ~RPoint(void) { };
+
     // Setters
 
     template<typename... Ts>
@@ -72,12 +76,6 @@ public:
 
     // Converters
 
-    std::vector<T> toVector(void) const {
-        std::vector<T> vec;
-        std::copy(r.begin(), r.end(), std::back_inserter(vec));
-        return vec;
-    };
-
     template <typename U>
     std::vector<U> toVector(void) const {
         std::vector<U> vec;
@@ -86,7 +84,7 @@ public:
     };
 
     template <typename U>
-    RPoint<U> to(void) const { return RPoint<U>((*this).toVector<U>()); };
+    RPoint<U> to(void) const { return RPoint<U>(toVector<U>()); };
 
     // Operators
 
@@ -383,20 +381,10 @@ T RPoint<T>::dot(RPoint<T> p) { return rpoint::dot(*this, p); };
 template <typename T>
 std::ostream &operator<<(std::ostream &os, const RPoint<T> &p) {
 
-    int status = -4;
-
-    //std::unique_ptr<char, void(*)(void*)> res {
-    //    abi::__cxa_demangle(typeid(T).name(), NULL, NULL, &status),
-    //    &std::free
-    //};
-
-    //const char *tname = (status == 0) ? res.get() : typeid(T).name();
-    //os << "RPoint<" << tname << ">(" << *p.cbegin();
-
+    os << "RPoint(" << *p.cbegin();
     for (typename RPoint<T>::const_iterator it = p.cbegin()+1; it != p.cend(); ++it) {
         os << ", " << *it;
     }
-
     os << ")";
     
     return os;
@@ -409,6 +397,5 @@ typedef RPoint<float>  RPointF;
 typedef RPoint<double> RPointD;
 typedef RPoint<bool>   RPointB;
 
-// MPI Custom Types ?
 
 #endif // __RPOINT_HEADER__

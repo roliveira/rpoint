@@ -20,9 +20,9 @@ install:
   
 script:
   - mkdir build && cd build
+  - cmake ../
   - make catch
   - make
-  - mate test
   - ./rpoint_test
 
 after_success:
