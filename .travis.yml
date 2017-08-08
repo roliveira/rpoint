@@ -10,7 +10,7 @@ before_install:
   - pip install --user pyyaml cpp-coveralls
   
 install:
-  - sudo apt-get install -y g++-6 lcov
+  - sudo apt-get install -y g++-6 
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 90
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 90
   - export CXX="g++-6"
@@ -24,12 +24,7 @@ script:
   - make catch
   - make
   - ./rpoint_test
+  - ls -la
 
 after_success:
-  #- coveralls --exclude tests --exclude external --gcov-options '\-lp' 
-  - cd ${TRAVIS_BUILD_DIR}
-  - lcov --directory . --capture --output-file coverage.info # capture coverage info
-  - lcov --remove coverage.info '/usr/*' --output-file coverage.info # filter out system
-  - lcov --list coverage.info #debug info
-  # Uploading report to CodeCov
-  - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
+  - coveralls --exclude tests --exclude external --gcov-options '\-lp' 
