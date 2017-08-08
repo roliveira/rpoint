@@ -43,12 +43,12 @@ public:
 
     // Constructors
 
-    RPoint(void)                                       : r(std::vector<T>(0)) { };
-    RPoint(const std::vector<T> vec)                   : r(vec)               { };
-    RPoint(const std::initializer_list<T> ivec)        : r(ivec)              { };
-    RPoint(const iterator begin, const iterator end)   : r(begin, end)        { };
-    RPoint(const RPoint<T> &p)                         : r(p.r)               { };
-    template<typename... Ts> RPoint(const Ts&... args) : r({ args... })       { };
+    RPoint(void)                                       : r(std::vector<T>(0))           { };
+    RPoint(const std::vector<T> vec)                   : r(vec)                         { };
+    RPoint(const std::initializer_list<T> ivec)        : r(ivec)                        { };
+    RPoint(const iterator begin, const iterator end)   : r(begin, end)                  { };
+    RPoint(const RPoint<T> &p)                         : r(p.r)                         { };
+    template<typename... Ts> RPoint(const Ts&... args) : r({ static_cast<T>(args)... }) { };
 
     // Destructors
 
@@ -57,16 +57,16 @@ public:
     // Setters
 
     template<typename... Ts>
-    void push_back(const Ts&... args)        { appendValue(args...); };
-    void push_back(const std::vector<T> vec) { appendValue(vec);     };
-    void push_back(const iterator cbegin, const iterator cend) { appendValue({ cbegin, cend }); };
-    void push_back(const RPoint<T> p)        { appendValue(p.r);     };
+    void push_back(const Ts&... args)                          { appendValue(static_cast<T>(args)...); };
+    void push_back(const std::vector<T> vec)                   { appendValue(vec);                     };
+    void push_back(const iterator cbegin, const iterator cend) { appendValue({ cbegin, cend });        };
+    void push_back(const RPoint<T> p)                          { appendValue(p.r);                     };
 
     // Getters
 
     size_t size(void) { return r.size(); }
 
-    RPoint<T> get(void) const { return *this; };
+    RPoint<T> get(void) const { return *this;       };
     T getX(void)              { return (*this)[0];  };
     T getY(void)              { return (*this)[1];  };
     T getZ(void)              { return (*this)[2];  };
@@ -100,9 +100,9 @@ public:
 
     template <typename U>
     RPoint<T> operator+(const U val) {
-        std::vector<T> vout = std::vector<T>(r.size());
-        std::transform(r.begin(), r.end(), vout.begin(), std::bind2nd(std::plus<T>(), val));
-        return RPoint<T>(vout);
+        RPoint<T> p = r;
+        std::transform(p.begin(), p.end(), p.begin(), std::bind2nd(std::plus<T>(), val));
+        return p;
     };
 
     // Addition : point + point
@@ -287,11 +287,7 @@ public:
 namespace rpoint {
 
     template <typename T>
-    T sum(RPoint<T> p) {
-        T res;
-        std::accumulate(p.begin(), p.end(), res);
-        return res;
-    };
+    T sum(RPoint<T> p) { return std::accumulate(p.begin(), p.end(), 0);};
 
     template <typename T>
     T min(RPoint<T> p) { return *std::min_element(p.begin(), p.end()); };
@@ -306,16 +302,12 @@ namespace rpoint {
     RPoint<T> sub(RPoint<T> p, RPoint<T> q) { return p - q; };
 
     template <typename T>
-    RPoint<T> abs(RPoint<T> p) {
-        RPoint<T> pout;
-        for(T v : p) pout.push_back(std::abs(v));
-        return pout;
-    };
+    RPoint<T> abs(RPoint<T> p) { return p.pow(2).sqrt(); };
 
     template <typename T>
     RPoint<T> pow(RPoint<T> p, double exponent) {
-        RPoint<T> pout;
-        for(T v : p) pout.push_back(std::pow(v, exponent));
+        RPoint<T> pout(p);
+        for(T& v : pout) v = std::pow(v, exponent);
         return pout;
     };
 

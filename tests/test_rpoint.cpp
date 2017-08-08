@@ -404,16 +404,16 @@ TEST_CASE("Operations on points", "[operators]") {
         SECTION("Addition of") {
         
             SECTION("a value") {
-                RPointI p(x, y, z);
                 REQUIRE_NOTHROW(p += val);
+                RPointI p(x, y, z);
                 REQUIRE((p + val)[0] == x + val);
                 REQUIRE((p + val)[1] == y + val);
                 REQUIRE((p + val)[2] == z + val);
             }
 
             SECTION("another point") {
-                RPointI p(x, y, z);
                 REQUIRE_NOTHROW(p += q);
+                RPointI p(x, y, z);
                 REQUIRE((p + q)[0] == x + a);
                 REQUIRE((p + q)[1] == y + b);
                 REQUIRE((p + q)[2] == z + c);
@@ -424,16 +424,16 @@ TEST_CASE("Operations on points", "[operators]") {
         SECTION("Subtraction of") {
         
             SECTION("a value") {
-                RPointI p(x, y, z);
                 REQUIRE_NOTHROW(p -= val);
+                RPointI p(x, y, z);
                 REQUIRE((p - val)[0] == x - val);
                 REQUIRE((p - val)[1] == y - val);
                 REQUIRE((p - val)[2] == z - val);
             }
 
             SECTION("another point") {
-                RPointI p(x, y, z);
                 REQUIRE_NOTHROW(p -= q);
+                RPointI p(x, y, z);
                 REQUIRE((p - q)[0] == x - a);
                 REQUIRE((p - q)[1] == y - b);
                 REQUIRE((p - q)[2] == z - c);
@@ -444,16 +444,16 @@ TEST_CASE("Operations on points", "[operators]") {
         SECTION("Multiplication of") {
         
             SECTION("a value") {
-                RPointI p(x, y, z);
                 REQUIRE_NOTHROW(p *= val);
+                RPointI p(x, y, z);
                 REQUIRE((p * val)[0] == x * val);
                 REQUIRE((p * val)[1] == y * val);
                 REQUIRE((p * val)[2] == z * val);
             }
 
             SECTION("another point") {
-                RPointI p(x, y, z);
                 REQUIRE_NOTHROW(p *= q);
+                RPointI p(x, y, z);
                 REQUIRE((p * q)[0] == x * a);
                 REQUIRE((p * q)[1] == y * b);
                 REQUIRE((p * q)[2] == z * c);
@@ -464,16 +464,16 @@ TEST_CASE("Operations on points", "[operators]") {
         SECTION("Division of") {
         
             SECTION("a value") {
-                RPointI p(x, y, z);
                 REQUIRE_NOTHROW(p /= val);
+                RPointI p(x, y, z);
                 REQUIRE((p / val)[0] == x / val);
                 REQUIRE((p / val)[1] == y / val);
                 REQUIRE((p / val)[2] == z / val);
             }
 
             SECTION("another point") {
-                RPointI p(x, y, z);
                 REQUIRE_NOTHROW(p /= q);
+                RPointI p(x, y, z);
                 REQUIRE((p / q)[0] == x / a);
                 REQUIRE((p / q)[1] == y / b);
                 REQUIRE((p / q)[2] == z / c);
@@ -487,16 +487,16 @@ TEST_CASE("Operations on points", "[operators]") {
         
         SECTION("increment") {
             REQUIRE_NOTHROW(p++);
-            REQUIRE(p[0] == x++);
-            REQUIRE(p[1] == y++);
-            REQUIRE(p[2] == z++);
+            REQUIRE(p[0] == ++x);
+            REQUIRE(p[1] == ++y);
+            REQUIRE(p[2] == ++z);
         }
 
         SECTION("decrement") {
             REQUIRE_NOTHROW(p--);
-            REQUIRE(p[0] == x--);
-            REQUIRE(p[1] == y--);
-            REQUIRE(p[2] == z--);
+            REQUIRE(p[0] == --x);
+            REQUIRE(p[1] == --y);
+            REQUIRE(p[2] == --z);
         }
 
     }
@@ -534,7 +534,7 @@ TEST_CASE("Streaming point", "[stream]") {
     std::ostringstream ostream;
 	ostream << p0;
 	
-    REQUIRE(p0string.c_str() == ostream.str().c_str());
+    REQUIRE(p0string == ostream.str());
 }
 
 
@@ -543,8 +543,8 @@ TEST_CASE("Streaming point", "[stream]") {
 
 TEST_CASE("Methods on points", "[methods]") {
 
-    RPointF p(-1, 4, 9);
-    RPointF q(2, 4, 5);
+    RPointF p(1, 4, 9);
+    RPointF q(-3, 4, 5);
 
     SECTION("from the own class") {
 
@@ -565,9 +565,9 @@ TEST_CASE("Methods on points", "[methods]") {
 
         SECTION("to get the absolute value") {
             REQUIRE_NOTHROW(p.abs());
-            REQUIRE(p.abs()[0] == std::abs(p[0]));
-            REQUIRE(p.abs()[1] == std::abs(p[1]));
-            REQUIRE(p.abs()[2] == std::abs(p[2]));
+            REQUIRE(q.abs()[0] == std::abs(q[0]));
+            REQUIRE(q.abs()[1] == std::abs(q[1]));
+            REQUIRE(q.abs()[2] == std::abs(q[2]));
         }
 
         SECTION("to get the power to a value") {
@@ -590,6 +590,7 @@ TEST_CASE("Methods on points", "[methods]") {
 
         SECTION("to get the dot product") {
             REQUIRE_NOTHROW(p.dot(q));
+            REQUIRE(p.dot(q) == p[0]*q[0] + p[1]*q[1] + p[2]*q[2]);
         }
     
     }
