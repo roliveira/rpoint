@@ -1,3 +1,7 @@
+# Editors
+.idea/
+.vscode/
+
 # Build directory
 build/
 
