@@ -287,7 +287,7 @@ public:
 namespace rpoint {
 
     template <typename T>
-    T sum(RPoint<T> p) { return std::accumulate(p.begin(), p.end(), 0);};
+    T sum(RPoint<T> p) { return std::accumulate(p.begin(), p.end(), static_cast<T>(0.0));};
 
     template <typename T>
     T min(RPoint<T> p) { return *std::min_element(p.begin(), p.end()); };

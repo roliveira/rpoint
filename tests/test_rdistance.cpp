@@ -12,7 +12,7 @@ TEST_CASE("Calculate the distance between two points using the ", "[distance]") 
         RPoint<double> p(1.0, 2.0, 3.0);
         RPoint<double> q(2.5, 6.1, 7.3);
         double d = euclidean(p, q);
-        double r = std::sqrt(std::pow(p.x() - q.x(), 2) + std::pow(p.y() - q.y(), 2) + std::pow(p.z() - q.z(), 2));
+        double r = std::sqrt(std::pow(q.x() - p.x(), 2) + std::pow(q.y() - p.y(), 2) + std::pow(q.z() - p.z(), 2));
         REQUIRE(d == Approx(r));
     }
 

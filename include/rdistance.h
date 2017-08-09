@@ -4,27 +4,15 @@
 #include "rpoint.h"
 
 template <typename T>
-T euclidean(RPoint<T> p0, RPoint<T> p1) {
-    RPoint<T> xd = p1 - p0;
-    return std::sqrt(rpoint::sum(rpoint::pow(xd, 2)));
-};
+T euclidean(RPoint<T> p0, RPoint<T> p1) { return std::sqrt(rpoint::sum(rpoint::pow(p1 - p0, 2))); };
 
 template <typename T>
-T manhattan(RPoint<T> p0, RPoint<T> p1) {
-    RPoint<T> xd = rpoint::abs(p1 - p0);
-    return rpoint::sum(xd);
-};
+T manhattan(RPoint<T> p0, RPoint<T> p1) { return rpoint::sum(rpoint::abs(p1 - p0)); };
 
 template <typename T>
-T canberra(RPoint<T> p0, RPoint<T> p1) {
-    RPoint<T> xd = rpoint::abs(p1 - p0);
-    return rpoint::sum(xd / (rpoint::abs(p0) + rpoint::abs(p1)));
-};
+T canberra(RPoint<T> p0, RPoint<T> p1) { return rpoint::sum(rpoint::abs(p1 - p0) / (rpoint::abs(p0) + rpoint::abs(p1))); };
 
 template <typename T>
-T chebyshev(RPoint<T> p0, RPoint<T> p1) {
-    RPoint<T> xd = rpoint::abs(p1 - p0);
-    return rpoint::max(xd);
-};
+T chebyshev(RPoint<T> p0, RPoint<T> p1) { return rpoint::max(rpoint::abs(p1 - p0)); };
 
 #endif // __DISTANCE_HEADER__
