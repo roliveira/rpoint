@@ -8,6 +8,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 
 set(HEADERS
     include/rpoint.h
+	include/rpointvector.h
     include/rdistance.h
 )
 
