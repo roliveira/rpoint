@@ -32,9 +32,12 @@ private:
     }
 
 public:
+    
+    // Definitions
 
-    typedef typename std::vector<T>::iterator       iterator;
-    typedef typename std::vector<T>::const_iterator const_iterator;
+    typedef typename T                                   type_t;
+    typedef typename std::vector<type_t>::iterator       iterator;
+    typedef typename std::vector<type_t>::const_iterator const_iterator;
 
     iterator       begin()        { return r.begin();  };
     iterator       end()          { return r.end();    };
@@ -91,8 +94,99 @@ public:
     // Member access operators
 
     // Subscript
+
     T& operator[](const int index) { return r.at(index); };
     const T& operator[](const int index) const { return r.at(index); };
+
+    // Comparison operators
+
+    // Equal: point == value
+
+    template <typename U>
+    bool operator==(const U val) {
+        return std::all_of(r.cbegin(), r.cend(), [val](int i) {return i == val; });
+    }
+
+    // Equal: point == point
+
+    template <typename U>
+    bool operator==(const RPoint<U> p) {
+        return std::equal(r.cbegin(), r.cend(), p.cbegin());
+    }
+
+    // Not equal: point != value
+
+    template <typename U>
+    bool operator!=(const U val) {
+        return std::any_of(r.cbegin(), r.cend(), [val](int i) {return i != val; });
+    }
+
+    // Not equal: point != point
+
+    template <typename U>
+    bool operator!=(const RPoint<U> p) {
+        return !std::equal(r.cbegin(), r.cend(), p.cbegin());
+    }
+
+    // Less than: point < value
+
+    template <typename U>
+    bool operator<(const U val) {
+        return std::all_of(r.cbegin(), r.cend(), [val](int i) {return i < val; });
+    }
+
+    // Less than: point < point
+
+    template <typename U>
+    bool operator<(const RPoint<U> p) {
+        RPoint<T> pd = *this - p;
+        return std::all_of(pd.cbegin(), pd.cend(), [](int i) {return i < 0; });
+    }
+
+    // Less than or equal: point <= value
+
+    template <typename U>
+    bool operator<=(const U val) {
+        return std::all_of(r.cbegin(), r.cend(), [val](int i) {return i <= val; });
+    }
+
+    // Less than or equal: point <= point
+
+    template <typename U>
+    bool operator<=(const RPoint<U> p) {
+        RPoint<T> pd = *this - p;
+        return std::all_of(pd.cbegin(), pd.cend(), [](int i) {return i <= 0; });
+    }
+
+    // Greater than: point > value
+
+    template <typename U>
+    bool operator>(const U val) {
+        return std::all_of(r.cbegin(), r.cend(), [val](int i) {return i > val; });
+    }
+
+    // Greater than: point > point
+
+    template <typename U>
+    bool operator>(const RPoint<U> p) {
+        RPoint<T> pd = *this - p;
+        return std::all_of(pd.cbegin(), pd.cend(), [](int i) {return i > 0; });
+    }
+
+    // Greater than: point >= value
+
+    template <typename U>
+    bool operator>=(const U val) {
+        return std::all_of(r.cbegin(), r.cend(), [val](int i) {return i >= val; });
+    }
+
+    // Greater than: point >= point
+
+    template <typename U>
+    bool operator>=(const RPoint<U> p) {
+        RPoint<T> pd = *this - p;
+        return std::all_of(pd.cbegin(), pd.cend(), [](int i) {return i >= 0; });
+    }
 
     // Arithmetic operators
 
@@ -307,7 +401,7 @@ namespace rpoint {
     template <typename T>
     RPoint<T> pow(RPoint<T> p, double exponent) {
         RPoint<T> pout(p);
-        for(T& v : pout) v = std::pow(v, exponent);
+        for(T& v : pout) v = static_cast<T>(std::pow(v, exponent));
         return pout;
     };
 
@@ -372,13 +466,11 @@ T RPoint<T>::dot(RPoint<T> p) { return rpoint::dot(*this, p); };
 
 template <typename T>
 std::ostream &operator<<(std::ostream &os, const RPoint<T> &p) {
-
     os << "RPoint(" << *p.cbegin();
     for (typename RPoint<T>::const_iterator it = p.cbegin()+1; it != p.cend(); ++it) {
         os << ", " << *it;
     }
     os << ")";
-    
     return os;
 }
 

@@ -323,6 +323,98 @@ TEST_CASE("Operations on points", "[operators]") {
         REQUIRE(p[2] == z);
     }
 
+    SECTION("comparison operations") {
+        RPointI r(x, x, x);
+        
+        SECTION("equality with") {
+
+            SECTION("a value") {
+                REQUIRE_FALSE(p == x);
+                REQUIRE(r == x);
+            }
+
+            SECTION("another point") {
+                REQUIRE_FALSE(p == q);
+                REQUIRE(p == p);
+            }
+
+        }
+
+        SECTION("inequality with") {
+
+            SECTION("a value") {
+                REQUIRE(p != x);
+                REQUIRE_FALSE(r != x);
+            }
+
+            SECTION("another point") {
+                REQUIRE(p != q);
+                REQUIRE_FALSE(p != p);
+            }
+
+        }
+
+        SECTION("less than") {
+
+            SECTION("a value") {
+                REQUIRE(p < a);
+                REQUIRE_FALSE(p < y);
+            }
+
+            SECTION("another point") {
+                REQUIRE(p < q);
+                REQUIRE_FALSE(p < p);
+            }
+
+        }
+
+        SECTION("less or equal to") {
+
+            SECTION("a value") {
+                REQUIRE(p <= a);
+                REQUIRE_FALSE(p <= y);
+            }
+
+            SECTION("another point") {
+                REQUIRE(p <= q);
+                REQUIRE(p <= p);
+            }
+
+        }
+
+
+        SECTION("greater than") {
+
+            SECTION("a value") {
+                REQUIRE_FALSE(p > a);
+                REQUIRE(q > x);
+            }
+
+            SECTION("another point") {
+                REQUIRE(q > p);
+                REQUIRE_FALSE(p > q);
+            }
+
+        }
+
+        SECTION("greater or equal to") {
+
+            SECTION("a value") {
+                REQUIRE_FALSE(p >= a);
+                REQUIRE(p >= r);
+                REQUIRE(q >= r);
+            }
+
+            SECTION("another point") {
+                REQUIRE(q >= p);
+                REQUIRE(p >= p);
+                REQUIRE_FALSE(p >= q);
+            }
+
+        }
+
+    }
+
     SECTION("Arithimetic operations") {
 
         SECTION("Addition of") {
