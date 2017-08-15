@@ -71,8 +71,47 @@ TEST_CASE("Creating point vectors", "[constructors]") {
 
 }
 
-TEST_CASE("", "[getters]") {
-    
+TEST_CASE("Get from point vectors", "[getters]") {
+    int x = 0, y = 1, z = 2;
+    RPointI p(x, y, z);
+
+    REQUIRE_NOTHROW(RVectorI(p, p, p, p, p));
+    RVectorI v(p, p, p, p, p);
+
+    SECTION("a vector containing the individual") {
+        SECTION("x-coordinate values") {
+            std::vector<int> rvec(v.getX());
+
+            for (int i : rvec) {
+                REQUIRE(i == x);
+            }
+        }
+
+        SECTION("y-coordinate values") {
+            std::vector<int> rvec(v.getY());
+
+            for (int i : rvec) {
+                REQUIRE(i == y);
+            }
+        }
+
+        SECTION("z-coordinate values") {
+            std::vector<int> rvec(v.getZ());
+
+            for (int i : rvec) {
+                REQUIRE(i == z);
+            }
+        }
+
+        SECTION("i-coordinate values") {
+            std::vector<int> rvec(v.getIndex(2));
+
+            for (int i : rvec) {
+                REQUIRE(i == z);
+            }
+        }
+    }
+
 }
 
 TEST_CASE("", "[converters]") {

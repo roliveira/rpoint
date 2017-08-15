@@ -15,6 +15,7 @@ public:
     typedef std::vector<T>                     vector_t;
     typedef RPoint<T>                          rpoint_t;
     typedef std::vector<rpoint_t>              rvector_t;
+
     typedef typename rvector_t::iterator       iterator;
     typedef typename rvector_t::const_iterator const_iterator;
 
@@ -40,15 +41,20 @@ public:
 
     // Getters
 
-    size_t size(void) { return v.size(); }
+    size_t    size(void)      { return v.size();    };
+    rvector_t get(void) const { return *this;       };
+    vector_t  getX(void)      { return getIndex(0); };
+    vector_t  getY(void)      { return getIndex(1); };
+    vector_t  getZ(void)      { return getIndex(2); };
+    vector_t  x(void)         { return getIndex(0); };
+    vector_t  y(void)         { return getIndex(1); };
+    vector_t  z(void)         { return getIndex(2); };
 
-    rvector_t get(void) const { return *this; };
-    vector_t  getX(void) { return ; };
-    vector_t  getY(void) { return ; };
-    vector_t  getZ(void) { return ; };
-    vector_t  x(void)    { return ; };
-    vector_t  y(void)    { return ; };
-    vector_t  z(void)    { return ; };
+    vector_t getIndex(int i) {
+        vector_t vec(size());
+        std::transform(begin(), end(), vec.begin(), [i](rpoint_t p) {return p[i]; });
+        return vec;
+    }
 
     // Converters
 
@@ -159,15 +165,68 @@ private:
     rvector_t v;
 };
 
+
 // Namespace
 
 namespace rpoint {
-    
-}
+    template <typename T>
+    std::vector<T> flat(RPointVector<RPoint<T>> v) { return; }
+
+    template <typename T>
+    RPoint<T> min(RPointVector<RPoint<T>> v) { return; };
+
+    template <typename T>
+    RPoint<T> max(RPointVector<RPoint<T>> v) { return; };
+
+    template <typename T>
+    RPoint<T> sum(RPointVector<RPoint<T>> v) { return; };
+
+    template <typename T>
+    RPointVector<RPoint<T>> add(RPointVector<RPoint<T>> v1, RPointVector<RPoint<T>> v2) { return; };
+
+    template <typename T>
+    RPointVector<RPoint<T>> sub(RPointVector<RPoint<T>> v1, RPointVector<RPoint<T>> v2) { return; };
+
+    template <typename T>
+    RPointVector<RPoint<T>> abs(RPointVector<RPoint<T>> v) { return; };
+
+    template <typename T>
+    RPointVector<RPoint<T>> pow(RPointVector<RPoint<T>> v, double exponent) { return; };
+
+    template <typename T>
+    RPointVector<RPoint<T>> sqrt(RPointVector<RPoint<T>> v) { return; };
+};
 
 // Free Operators
 
 // Methods
+
+template <typename T>
+typename RPointVector<T>::vector_t RPointVector<T>::flat() { return; }
+
+template <typename T>
+typename RPointVector<T>::rpoint_t RPointVector<T>::min(void) { return; };
+
+template <typename T>
+typename RPointVector<T>::rpoint_t RPointVector<T>::max(void) { return; };
+
+template <typename T>
+typename RPointVector<T>::rpoint_t RPointVector<T>::sum(void) { return; };
+
+template <typename T>
+typename RPointVector<T>::rvector_t RPointVector<T>::add(rvector_t v) { return; };
+
+template <typename T>
+typename RPointVector<T>::rvector_t RPointVector<T>::sub(rvector_t v) { return; };
+
+template <typename T>
+typename RPointVector<T>::rvector_t RPointVector<T>::abs(void) { return; };
+
+template <typename T>
+typename RPointVector<T>::rvector_t RPointVector<T>::pow(double exponent) { return; };
+
+template <typename T>
+typename RPointVector<T>::rvector_t sqrt(void) { return; };
 
 // Streams
 
