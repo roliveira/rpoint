@@ -34,10 +34,9 @@ private:
 public:
     
     // Definitions
-
-    typedef typename T                                   type_t;
-    typedef typename std::vector<type_t>::iterator       iterator;
-    typedef typename std::vector<type_t>::const_iterator const_iterator;
+    
+    typedef typename std::vector<T>::iterator       iterator;
+    typedef typename std::vector<T>::const_iterator const_iterator;
 
     iterator       begin()        { return r.begin();  };
     iterator       end()          { return r.end();    };
