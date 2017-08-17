@@ -2,7 +2,7 @@
 #define __RPOINTVECTOR_HEADER__
 
 
-#include "rpoint.h"
+#include "rpoint.hpp"
 
 
 // RPointVector class

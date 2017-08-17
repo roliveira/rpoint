@@ -1,7 +1,7 @@
 
 #include "catch.hpp"
-//#include "rpoint.h"
-#include "rpointvector.h"
+//#include "rpoint.hpp"
+#include "rpointvector.hpp"
 
 
 TEST_CASE("Creating point vectors", "[constructors]") {

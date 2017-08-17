@@ -7,9 +7,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
 set(HEADERS
-    include/rpoint.h
-	include/rpointvector.h
-    include/rdistance.h
+    include/rexpression.hpp
+    include/roperators.hpp
+    include/rpoint.hpp
+	include/rpointvector.hpp
+    include/rdistance.hpp
 )
 
 add_library(${PROJECT_NAME} INTERFACE)

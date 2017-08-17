@@ -1,7 +1,7 @@
 
 #include "catch.hpp"
-#include "rpoint.h"
-#include "rdistance.h"
+#include "rpoint.hpp"
+#include "rdistance.hpp"
 
 
 

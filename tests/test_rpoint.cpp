@@ -1,6 +1,6 @@
 
 #include "catch.hpp"
-#include "rpoint.h"
+#include "rpoint.hpp"
 
 
 // Constructors

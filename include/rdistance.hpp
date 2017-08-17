@@ -1,8 +1,8 @@
-#ifndef __DISTANCE_HEADER__
-#define __DISTANCE_HEADER__
+#ifndef __RDISTANCE_HEADER__
+#define __RDISTANCE_HEADER__
 
-#include "rpoint.h"
-#include "rpointvector.h"
+#include "rpoint.hpp"
+#include "rpointvector.hpp"
 
 template <typename T>
 T euclidean(RPoint<T> p0, RPoint<T> p1) { return std::sqrt(rpoint::sum(rpoint::pow(p1 - p0, 2))); };
@@ -28,4 +28,4 @@ T chebyshev(RPoint<T> p0, RPoint<T> p1) { return rpoint::max(rpoint::abs(p1 - p0
 template <typename T>
 RPointVector<T> chebyshev(RPointVector<T> v0, RPointVector<T> v1) { return; };
 
-#endif // __DISTANCE_HEADER__
+#endif//__RDISTANCE_HEADER__
